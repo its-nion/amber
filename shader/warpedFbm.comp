@@ -1,0 +1,209 @@
+//GLSL version to use
+#version 460
+
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+//size of a workgroup for compute
+layout (local_size_x = 16, local_size_y = 16) in;
+
+//descriptor bindings for the pipeline
+layout(rgba16f, set = 0, binding = 0) uniform image2D image;
+
+//push constants
+layout( push_constant ) uniform constants
+{
+    float uv_scale;
+    int fbm_octaves;
+    float fbm_amplitude;
+    float fbm_frequency;
+    float fbm_lacunarity;
+    float fbm_gain;
+    float fbm_shift;
+    float time;
+    int warp_iterations;
+    int warp_strength;
+    int warp_colorShade;
+    int warp_tintShade;
+    float warp_colorBalance;
+    float warp_tintStrength;
+    float th;
+    float fo;
+    vec2 uv_offset;
+    vec2 warp_offset;
+    vec4 warp_primaryColor;
+    vec4 warp_secondaryColor;
+    vec4 warp_tintColor;
+} PushConstants;
+
+/// Pseudo random number generator
+/// by Patricio Gonzalez Vivo & Jen Lowe
+/// https://thebookofshaders.com/10/
+float hash (vec2 v) {
+    return fract(sin(dot(v.xy, vec2(12.9898,78.233))) * 10);
+}
+
+
+/// 2D Noise 
+/// Morgan McGuire
+/// https://www.shadertoy.com/view/4dS3Wd
+float noise(vec2 x) {
+    vec2 i = floor(x);
+    vec2 f = fract(x);
+
+	// Four corners in 2D of a tile
+	float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+
+    // Simple 2D lerp using smoothstep envelope between the values.
+	// return vec3(mix(mix(a, b, smoothstep(0.0, 1.0, f.x)),
+	//			mix(c, d, smoothstep(0.0, 1.0, f.x)),
+	//			smoothstep(0.0, 1.0, f.y)));
+
+	// Same code, with the clamps in smoothstep and common subexpressions
+	// optimized away.
+    vec2 u = f * f * (3.0 - 2.0 * f);
+	return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+
+/// Adapted Fractal Brownian Motion
+/// from Patricio Gonzalez Vivo & Jen Lowe | Morgan McGuire
+/// https://thebookofshaders.com/13/
+/// https://www.shadertoy.com/view/4dS3Wd
+float fbm(vec2 x) {
+	float amplitude = PushConstants.fbm_amplitude;
+    float frequency = PushConstants.fbm_frequency;
+
+    float lacunarity = PushConstants.fbm_lacunarity;
+    float gain = PushConstants.fbm_gain;
+
+    float shift = PushConstants.fbm_shift;
+
+    float color = 0.0;
+
+	// Rotate to reduce axial bias
+    mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
+
+    // Loop of octaves
+    for (int i = 0; i < PushConstants.fbm_octaves; i++) {
+        color += amplitude * noise(frequency * x);
+        x = rot * x * shift;
+        frequency *= lacunarity;
+        amplitude *= gain;
+    }
+
+
+	return color;
+}
+
+
+/// Adapted Warp
+/// from Inigo Quilez
+/// https://iquilezles.org/articles/warp/
+float warp(vec2 x) {
+    vec2 offset = vec2(1.23, 4.56);
+    vec3 colortint = vec3(0, 1, 0);
+
+    vec2 q = vec2( fbm( x + offset ),
+                   fbm( x + 2 * offset ) );
+
+    for (int i = 0; i < PushConstants.warp_iterations; i++) {
+        q = vec2( fbm( x + 4.0 * q + (i * offset) + 0.05 * PushConstants.time),
+                  fbm( x + 4.0 * q + (2 * i * offset + 0.1 * PushConstants.time) ) );
+    }
+
+    return fbm( x + 4.0 * q );
+}
+
+vec3 warpColor(vec2 x) {
+    vec2 offset = vec2(1.23, 4.56);
+    //vec3 colorTint = vec3(0, 0, 0);
+
+    vec2 q = vec2( fbm( x + offset),
+                   fbm( x + 2 * offset));
+
+    for (int i = 0; i < PushConstants.warp_iterations; i++) {
+        q = vec2( fbm( x + q * PushConstants.warp_strength + (i * offset) + 0.05 * PushConstants.time),
+                  fbm( x + q * PushConstants.warp_strength + (2 * i * offset + 0.1 * PushConstants.time) ) );
+
+        //  colorTint = mix(colorTint,
+        //                  PushConstants.tintColor.xyz,
+        //                  clamp(length(q), 0.0, 1.0));
+    }
+
+    float f = fbm( x + q * PushConstants.warp_strength );
+
+    float powF = pow(f, PushConstants.warp_colorShade);
+
+    vec3 color = mix(PushConstants.warp_primaryColor.xyz,
+                     PushConstants.warp_secondaryColor.xyz,
+                     clamp(f, 0.0, 1.0));
+                     //clamp(pow(f, PushConstants.warp_colorShade) * PushConstants.warp_colorBalance, 0.0, 1.0));
+                     //clamp(pow(f, PushConstants.warp_colorShade) + 0.25 * pow(f, PushConstants.warp_colorShade) / PushConstants.warp_colorShade + PushConstants.warp_colorBalance, 0.0, 1.0));
+                     //clamp(smoothstep(0.0, 1.0, pow(f, PushConstants.warp_colorShade)) * PushConstants.warp_colorStrength, 0.0, 1.0));
+                     //clamp((f*f*f*f + 0.5 * f * f * f + 0.25 * f * f + 0.1 * f) * PushConstants.warp_colorStrength, 0.0, 1.0));
+                     //clamp(pow(f, PushConstants.warp_colorShade) * PushConstants.warp_colorStrength, 0.0, 1.0));
+
+    color = mix(color,
+                PushConstants.warp_tintColor.xyz,
+                clamp(pow(length(q), PushConstants.warp_tintShade) * PushConstants.warp_tintStrength, 0.0, 1.0));
+
+    return color;
+}
+
+vec3 warp3Color(vec2 x) {
+    vec2 offset = vec2(1.23, 4.56);
+    vec3 colorTint = vec3(0, 0, 0);
+
+    vec2 q = vec2( fbm( x + offset ),
+                   fbm( x + 2 * offset ) );
+
+    vec2 r = vec2( fbm( x + 4.0 * q + vec2(15.23, 1.56) + 0.05 * PushConstants.time),
+                   fbm( x + 4.0 * q + vec2(12.23, 4.56) + 0.10 * PushConstants.time) );
+
+    float f = fbm( x + 4.0 * r );
+
+    vec3 color = mix(vec3(0.0, 0.0, 0.0),
+                     vec3(0.9, 0.85, 0.67),
+                     clamp(f*f*f*f, 0.0, 1.0));
+
+    color = mix(color,
+                vec3(0.0, 0.8, 1.0),
+                clamp(pow(length(r), 6) * 0.1, 0.0, 1.0));
+
+    // color = mix(color,
+    //             vec3(0.0, 0.8, 1.0),
+    //             clamp(length(r * r *r *r * r * r) * PushConstants.scale, 0.0, 1.0));
+
+    return color;
+}
+
+void main() 
+{
+    ivec2 texCoord = ivec2(gl_GlobalInvocationID.xy);
+    vec2 imgSize = imageSize(image);
+
+    // Calculate uv
+    vec2 uv = texCoord / imgSize;
+    uv.x *= imgSize.x / imgSize.y;
+    uv.y = 1 - uv.y;
+
+    // Modify uv
+    uv.x = uv.x * PushConstants.uv_scale + PushConstants.uv_offset.x;
+    uv.y = uv.y * PushConstants.uv_scale + PushConstants.uv_offset.y;
+
+    // Calculate fbm
+    //vec4 color = vec4(fbm(uv * 3.0 + PushConstants.time * 0.1, PushConstants.octaves));
+    //vec4 color = vec4(fbm.xyz, 1.0);
+
+    vec3 w = warpColor(uv);
+    vec4 color = vec4(w.xyz, 1.0);
+
+    // Gamma correction
+    color = vec4(pow(color.xyz,vec3(1./2.2)), 1.0);
+
+    imageStore(image, texCoord, color);
+}
