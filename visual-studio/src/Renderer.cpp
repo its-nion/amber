@@ -1,10 +1,9 @@
 
 #include "Renderer.h"
+#include "../shader/warpedFbm.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
-
-#include "../shader/warpedFbm.h"
 
 // Public methods
 
@@ -182,6 +181,7 @@ void Renderer::drawImGui()
     ImGui::NewFrame();
 
     // Menu Bar
+    ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.35, 0.35, 0.35, 0.0));
     std::string menu_action = "";
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File"))
@@ -220,6 +220,7 @@ void Renderer::drawImGui()
 
         ImGui::EndMainMenuBar();
     }
+    ImGui::PopStyleColor();
 
     // Property Window
     ImGui::Begin("Properties", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove);
@@ -229,6 +230,8 @@ void Renderer::drawImGui()
 
         ImDrawList* drawList = ImGui::GetWindowDrawList();
         drawList->ChannelsSplit(2);
+
+        //ImGui::GetStyle().FrameBorderSize = 1.0;
 
         // UV
         {
@@ -242,7 +245,7 @@ void Renderer::drawImGui()
 
             ImGui::Text("UV");
 
-            ImGui::Dummy(ImVec2(0.0, 2.5));
+            ImGui::Dummy(ImVec2(0.0, 1.0));
 
             if (ImGui::BeginTable("uvTable", 2, 0))
             {
@@ -279,7 +282,6 @@ void Renderer::drawImGui()
                 ImGui::EndTable();
             }
 
-
             ImGui::EndGroup();
             ImGui::PopItemWidth();
 
@@ -291,12 +293,10 @@ void Renderer::drawImGui()
 
             drawList->ChannelsSetCurrent(0);
 
-            // Property background
-            drawList->AddRectFilled(group_min, group_max, IM_COL32(40, 40, 40, 255), 2.5, 0.0);
-            // Title background
-            drawList->AddRectFilled(group_min, ImVec2(group_max.x, group_min.y + 25.0), IM_COL32(45, 45, 45, 255), 2.5, 0.0);
-            // Border
-            drawList->AddRect(group_min, group_max, IM_COL32(45, 45, 45, 255), 2.5, 0.0, 2.0);
+            // Background
+            drawList->AddRectFilled(group_min, group_max, IM_COL32(47.5, 47.5, 47.5, 255), 0.0, 0.0);
+            // Separator
+            drawList->AddLine(ImVec2(group_min.x + 7.5, group_min.y + 22.0), ImVec2(group_max.x - 7.5, group_min.y + 22.0), IM_COL32(70.0, 70.0, 70.0, 255), 1.0);
         }
 
         ImGui::Dummy(ImVec2(0.0, 5.0));
@@ -313,7 +313,7 @@ void Renderer::drawImGui()
 
             ImGui::Text("Fractal Brownian Motion");
 
-            ImGui::Dummy(ImVec2(0.0, 2.5));
+            ImGui::Dummy(ImVec2(0.0, 1.0));
 
             if (ImGui::BeginTable("fbmTable", 2, 0))
             {
@@ -391,12 +391,10 @@ void Renderer::drawImGui()
 
             drawList->ChannelsSetCurrent(0);
 
-            // Property background
-            drawList->AddRectFilled(group_min, group_max, IM_COL32(40, 40, 40, 255), 2.5, 0.0);
-            // Title background
-            drawList->AddRectFilled(group_min, ImVec2(group_max.x, group_min.y + 25.0), IM_COL32(45, 45, 45, 255), 2.5, 0.0);
-            // Border
-            drawList->AddRect(group_min, group_max, IM_COL32(45, 45, 45, 255), 2.5, 0.0, 2.0);
+            // Background
+            drawList->AddRectFilled(group_min, group_max, IM_COL32(47.5, 47.5, 47.5, 255), 0.0, 0.0);
+            // Separator
+            drawList->AddLine(ImVec2(group_min.x + 7.5, group_min.y + 22.0), ImVec2(group_max.x - 7.5, group_min.y + 22.0), IM_COL32(70.0, 70.0, 70.0, 255), 1.0);
         }
 
         ImGui::Dummy(ImVec2(0.0, 5.0));
@@ -413,7 +411,7 @@ void Renderer::drawImGui()
 
             ImGui::Text("Warp");
 
-            ImGui::Dummy(ImVec2(0.0, 2.5));
+            ImGui::Dummy(ImVec2(0.0, 1.0));
 
             if (ImGui::BeginTable("warpTable", 2, 0))
             {
@@ -516,13 +514,13 @@ void Renderer::drawImGui()
 
             drawList->ChannelsSetCurrent(0);
 
-            // Property background
-            drawList->AddRectFilled(group_min, group_max, IM_COL32(40, 40, 40, 255), 2.5, 0.0);
-            // Title background
-            drawList->AddRectFilled(group_min, ImVec2(group_max.x, group_min.y + 25.0), IM_COL32(45, 45, 45, 255), 2.5, 0.0);
-            // Border
-            drawList->AddRect(group_min, group_max, IM_COL32(45, 45, 45, 255), 2.5, 0.0, 2.0);
+            // Background
+            drawList->AddRectFilled(group_min, group_max, IM_COL32(47.5, 47.5, 47.5, 255), 0.0, 0.0);
+            // Separator
+            drawList->AddLine(ImVec2(group_min.x + 7.5, group_min.y + 22.0), ImVec2(group_max.x - 7.5, group_min.y + 22.0), IM_COL32(70.0, 70.0, 70.0, 255), 1.0);
         }
+
+        ImGui::GetStyle().FrameBorderSize = 0.0;
 
         drawList->ChannelsMerge();
 
@@ -970,22 +968,32 @@ void Renderer::initImGui(GLFWwindow* windowHandle)
     // Set Style
     ImGuiStyle* style = &ImGui::GetStyle();
 
+    // Border
+    style->WindowBorderSize = 0.0;
+
     ImVec4 primaryColor = ImVec4(1.0, 0.5, 0.0, 1.0);
     ImVec4 primaryHighlightColor = ImVec4(1.0, 0.7, 0.0, 1.0);
     ImVec4 darkColor = ImVec4(0.35, 0.25, 0.15, 1.0);
     ImVec4 darkHighlightColor = ImVec4(0.35, 0.25, 0.15, 1.0);
 
-    // Menu Bar
-    style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.14, 0.14, 0.14, 1.0); // BG
-    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.25, 0.25, 0.25, 1.0); // HOVERED
+    // Menu Bar (Oben)
+    style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.2, 0.2, 0.2, 1.0); // BG
+    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.4, 0.4, 0.4, 1.0); // HOVERED
 
     // Properties Window
-    style->Colors[ImGuiCol_WindowBg] = ImVec4(0.14, 0.14, 0.14, 1.0); // BG
+    style->Colors[ImGuiCol_WindowBg] = ImVec4(0.15, 0.15, 0.15, 1.0); // BG
+
+    // Widgets
+    style->Colors[ImGuiCol_FrameBg] = ImVec4(0.25, 0.25, 0.25, 1.0); // Border around inputs
+    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.35, 0.35, 0.35, 1.0);
+    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.45, 0.45, 0.45, 1.0);
+    style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.45, 0.45, 0.45, 1.0);
+
+    style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.55, 0.55, 0.55, 1.0);
+    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.65, 0.65, 0.65, 1.0);
 
     // Properties
     //style->Colors[ImGuiCol_FrameBg] = ImVec4(0.14, 0.14, 0.14, 1.0); // BG
-    //style->Colors[ImGuiCol_FrameBgHovered] = darkHighlightColor;
-    //style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.0, 0.0, 0.0, 1.0);
 
 
     style->Colors[ImGuiCol_TitleBg] = primaryColor;
