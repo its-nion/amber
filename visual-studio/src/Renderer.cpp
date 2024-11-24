@@ -190,7 +190,7 @@ void Renderer::drawImGui()
 
             if (ImGui::MenuItem("Export")) 
             {
-                if (_drawImage.imageView != NULL) exportImage("F:/Hobby/Vulkan/Amber/Image.png");
+                if (_drawImage.imageView != NULL) exportImage("F:/Hobby/Desktop-Apps/Amber/Image.png");
             }
 
             ImGui::EndMenu();
