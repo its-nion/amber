@@ -17,7 +17,7 @@ private:
     bool _resizeSwapchain = false;
 
     bool _statsOpened;
-    float _zoomFactor = 0.75;
+    float _zoomFactor = 0.9;
     bool _resizeDrawImage = false;
 
     // Frames

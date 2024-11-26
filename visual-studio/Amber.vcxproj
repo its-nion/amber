@@ -147,7 +147,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="shader\warpedFbm.h" />
+    <ClInclude Include="embedded-resources\Amber.h" />
+    <ClInclude Include="embedded-resources\warpedFbm.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\util\libraries.h" />
@@ -169,7 +171,8 @@
     <ClInclude Include="third-party\include\vkbootstrap\VkBootstrapDispatch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="shader\warpedFbm.cpp" />
+    <ClCompile Include="embedded-resources\Amber.cpp" />
+    <ClCompile Include="embedded-resources\warpedFbm.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -183,6 +186,12 @@
     <ClCompile Include="third-party\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="third-party\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="third-party\include\vkbootstrap\VkBootstrap.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Amber.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\icon\Amber.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

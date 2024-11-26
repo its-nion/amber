@@ -1,6 +1,6 @@
 
 #include "Renderer.h"
-#include "../shader/warpedFbm.h"
+#include "../embedded-resources/warpedFbm.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
@@ -204,13 +204,13 @@ void Renderer::drawImGui()
 
         if (ImGui::BeginMenu("Zoom"))
         {
-            if (ImGui::MenuItem("25%")) _zoomFactor = 0.25;
             if (ImGui::MenuItem("50%")) _zoomFactor = 0.50;
-            if (ImGui::MenuItem("75%")) _zoomFactor = 0.75;
+            if (ImGui::MenuItem("70%")) _zoomFactor = 0.70;
+            if (ImGui::MenuItem("90%")) _zoomFactor = 0.90;
             if (ImGui::MenuItem("100%")) _zoomFactor = 1.00;
-            if (ImGui::MenuItem("125%")) _zoomFactor = 1.25;
+            if (ImGui::MenuItem("110%")) _zoomFactor = 1.10;
+            if (ImGui::MenuItem("130%")) _zoomFactor = 1.30;
             if (ImGui::MenuItem("150%")) _zoomFactor = 1.50;
-            if (ImGui::MenuItem("200%")) _zoomFactor = 2.00;
             ImGui::EndMenu();
         }
 
@@ -230,8 +230,6 @@ void Renderer::drawImGui()
 
         ImDrawList* drawList = ImGui::GetWindowDrawList();
         drawList->ChannelsSplit(2);
-
-        //ImGui::GetStyle().FrameBorderSize = 1.0;
 
         // UV
         {
@@ -319,8 +317,6 @@ void Renderer::drawImGui()
             {
                 ImGui::TableSetupColumn("fbmOne", ImGuiTableColumnFlags_WidthFixed, 115.0f);
                 ImGui::TableSetupColumn("fbmTwo", ImGuiTableColumnFlags_WidthFixed, 145.0f);
-
-                //float fbm_shift;
 
                 // Octaves
                 ImGui::TableNextRow();
@@ -602,8 +598,8 @@ void Renderer::drawImGui()
         if (menu_action == "About") ImGui::OpenPopup("About");
         if (ImGui::BeginPopupModal("About", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::SetWindowSize(ImVec2(300, 125), 0);
-            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 300.0) / 2.0, (imGuiViewport->WorkSize.y - 125.0) / 2.0), 0);
+            ImGui::SetWindowSize(ImVec2(300, 130), 0);
+            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 300.0) / 2.0, (imGuiViewport->WorkSize.y - 130.0) / 2.0), 0);
 
             ImGui::Text(
                 "Amber is a simple image generator that \n"
@@ -617,8 +613,8 @@ void Renderer::drawImGui()
             ImGui::SameLine();
             ImGui::TextLinkOpenURL("Github", "https://github.com/its-nion/Amber");
 
-            ImGui::SetCursorPos(ImVec2(270, 97.5));
-            if (ImGui::Button("OK")) ImGui::CloseCurrentPopup();
+            ImGui::SetCursorPos(ImVec2(217.5, 102.5));
+            if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f))) ImGui::CloseCurrentPopup();
 
             ImGui::EndPopup();
         }
@@ -627,26 +623,53 @@ void Renderer::drawImGui()
         if (menu_action == "New") ImGui::OpenPopup("New Image");
         if (ImGui::BeginPopupModal("New Image", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::SetWindowSize(ImVec2(200, 100), 0);
+            ImGui::SetWindowSize(ImVec2(200, 105), 0);
             ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 200.0) / 2.0, (imGuiViewport->WorkSize.y - 100.0) / 2.0), 0);
 
             static int inputImageWidth = 1280;
             static int inputImageHeight = 720;
 
-            ImGui::InputInt("Width", &inputImageWidth, 0);
-            ImGui::InputInt("Height", &inputImageHeight, 0);
+            if (ImGui::BeginTable("imageSizeTable", 2, 0))
+            {
+                ImGui::TableSetupColumn("sizeOne", ImGuiTableColumnFlags_WidthFixed, 50.0f);
+                ImGui::TableSetupColumn("sizeTwo", ImGuiTableColumnFlags_WidthFixed, 125.0f);
 
-            if (ImGui::Button("OK"))
+                // Width
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("Width");
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(-1.0);
+                ImGui::InputInt("##Width", &inputImageWidth, 0);
+
+                // Height
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("Height");
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(-1.0);
+                ImGui::InputInt("##Height", &inputImageHeight, 0);
+
+                ImGui::EndTable();
+            }
+
+            ImGui::Dummy(ImVec2(0.0, 3.0));
+
+            ImGui::SetCursorPos(ImVec2(82.5, 80));
+
+            if (ImGui::Button("Cancel", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f)))
             {
                 _resizeDrawImage = true;
 
                 _drawImage.imageExtent = VkExtent3D(inputImageWidth, inputImageHeight, 1);
 
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Cancel"))
-            {
                 ImGui::CloseCurrentPopup();
             }
 
@@ -977,14 +1000,14 @@ void Renderer::initImGui(GLFWwindow* windowHandle)
     ImVec4 darkHighlightColor = ImVec4(0.35, 0.25, 0.15, 1.0);
 
     // Menu Bar (Oben)
-    style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.2, 0.2, 0.2, 1.0); // BG
-    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.4, 0.4, 0.4, 1.0); // HOVERED
+    style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.2, 0.2, 0.2, 1.0);
+    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.4, 0.4, 0.4, 1.0);
 
     // Properties Window
-    style->Colors[ImGuiCol_WindowBg] = ImVec4(0.15, 0.15, 0.15, 1.0); // BG
+    style->Colors[ImGuiCol_WindowBg] = ImVec4(0.15, 0.15, 0.15, 1.0);
 
     // Widgets
-    style->Colors[ImGuiCol_FrameBg] = ImVec4(0.25, 0.25, 0.25, 1.0); // Border around inputs
+    style->Colors[ImGuiCol_FrameBg] = ImVec4(0.25, 0.25, 0.25, 1.0);
     style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.35, 0.35, 0.35, 1.0);
     style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.45, 0.45, 0.45, 1.0);
     style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.45, 0.45, 0.45, 1.0);
@@ -992,22 +1015,16 @@ void Renderer::initImGui(GLFWwindow* windowHandle)
     style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.55, 0.55, 0.55, 1.0);
     style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.65, 0.65, 0.65, 1.0);
 
-    // Properties
-    //style->Colors[ImGuiCol_FrameBg] = ImVec4(0.14, 0.14, 0.14, 1.0); // BG
+    // Popup
+    style->Colors[ImGuiCol_TitleBg] = ImVec4(0.15, 0.15, 0.15, 1.0);
+    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.15, 0.15, 0.15, 1.0);
 
+    style->Colors[ImGuiCol_PopupBg] = ImVec4(0.2, 0.2, 0.2, 1.0);
 
-    style->Colors[ImGuiCol_TitleBg] = primaryColor;
-    style->Colors[ImGuiCol_TitleBgActive] = primaryColor;
-
-    //style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.0, 0.0, 0.0, 1.0);
-    //style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.0, 0.0, 0.0, 1.0);
-
-    style->Colors[ImGuiCol_Button] = darkColor;
-    style->Colors[ImGuiCol_ButtonActive] = primaryHighlightColor;
-    style->Colors[ImGuiCol_ButtonHovered] = primaryColor;
-
-    //style->Colors[ImGuiCol_TabHovered] = highlightColor;
-    //style->Colors[ImGuiCol_HeaderActive] = primaryColor;
+    // Button
+    style->Colors[ImGuiCol_Button] = ImVec4(0.30, 0.30, 0.30, 1.0);
+    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.35, 0.35, 0.35, 1.0);;
+    style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.4, 0.4, 0.4, 1.0);;
 }
 
 void Renderer::initValues()

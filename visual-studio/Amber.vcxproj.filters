@@ -72,7 +72,13 @@
     <ClInclude Include="third-party\include\vkbootstrap\VkBootstrapDispatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shader\warpedFbm.h">
+    <ClInclude Include="embedded-resources\warpedFbm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="embedded-resources\Amber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,8 +122,21 @@
     <ClCompile Include="third-party\include\vkbootstrap\VkBootstrap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shader\warpedFbm.cpp">
+    <ClCompile Include="embedded-resources\warpedFbm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="embedded-resources\Amber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Amber.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\icon\Amber.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

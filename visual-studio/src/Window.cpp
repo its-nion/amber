@@ -1,5 +1,6 @@
 
 #include "Window.h"
+#include "../embedded-resources/amber.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -34,10 +35,15 @@ void Window::create(const char* name, const int width, const int height)
     glfwMakeContextCurrent(_windowHandle);
 
     // Window Icon
-    GLFWimage images[1];
-    images[0].pixels = stbi_load("icon/Amber.png", &images[0].width, &images[0].height, 0, 4);
-    glfwSetWindowIcon(_windowHandle, 1, images);
-    stbi_image_free(images[0].pixels);
+    const bin2cpp::File& pngFile = bin2cpp::getAmberPngFile();
+    size_t pngSize = pngFile.getSize();
+    const unsigned char* pngData = reinterpret_cast<const unsigned char*>(pngFile.getBuffer());
+
+    int pngWidth, pngHeight, pngChannels;
+    unsigned char* data = stbi_load_from_memory(pngData, static_cast<int>(pngSize), &pngWidth, &pngHeight, &pngChannels, 4);
+
+    GLFWimage icon = { pngWidth, pngHeight, data };
+    glfwSetWindowIcon(_windowHandle, 1, &icon);
 }
 
 void Window::destroy()
