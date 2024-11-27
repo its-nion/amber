@@ -167,6 +167,7 @@
     <ClInclude Include="third-party\include\imgui\imstb_truetype.h" />
     <ClInclude Include="third-party\include\stb\stb_image.h" />
     <ClInclude Include="third-party\include\stb\stb_image_write.h" />
+    <ClInclude Include="third-party\include\tinyfiledialogs\tinyfiledialogs.h" />
     <ClInclude Include="third-party\include\vkbootstrap\VkBootstrap.h" />
     <ClInclude Include="third-party\include\vkbootstrap\VkBootstrapDispatch.h" />
   </ItemGroup>
@@ -185,6 +186,7 @@
     <ClCompile Include="third-party\include\imgui\imgui_impl_vulkan.cpp" />
     <ClCompile Include="third-party\include\imgui\imgui_tables.cpp" />
     <ClCompile Include="third-party\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="third-party\include\tinyfiledialogs\tinyfiledialogs.cpp" />
     <ClCompile Include="third-party\include\vkbootstrap\VkBootstrap.cpp" />
   </ItemGroup>
   <ItemGroup>

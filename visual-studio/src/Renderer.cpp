@@ -1,5 +1,6 @@
 
 #include "Renderer.h"
+#include "../third-party/include/tinyfiledialogs/tinyfiledialogs.h"
 #include "../embedded-resources/warpedFbm.h"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -190,7 +191,17 @@ void Renderer::drawImGui()
 
             if (ImGui::MenuItem("Export")) 
             {
-                if (_drawImage.imageView != NULL) exportImage("F:/Hobby/Desktop-Apps/Amber/Image.png");
+                if (_drawImage.imageView == NULL)
+                {
+                    menu_action = "NoImage";
+                }
+                else
+                {
+                    const char* filterPatterns[] = { "*.png" };
+                    char* path = tinyfd_saveFileDialog("Export", "Example", 1, filterPatterns, nullptr);
+
+                    if (path != NULL) exportImage(path);
+                }
             }
 
             ImGui::EndMenu();
@@ -594,6 +605,24 @@ void Renderer::drawImGui()
             }
         }
 
+        // No Image Error
+        if (menu_action == "NoImage") ImGui::OpenPopup("No Image Error");
+        if (ImGui::BeginPopupModal("No Image Error", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::SetWindowSize(ImVec2(300, 100), 0);
+            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 300.0) / 2.0, (imGuiViewport->WorkSize.y - 130.0) / 2.0), 0);
+
+            ImGui::Text(
+                "Please create a new Image before\n"
+                "trying to export!\n"
+            );
+
+            ImGui::SetCursorPos(ImVec2(217.5, 72.5));
+            if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f))) ImGui::CloseCurrentPopup();
+
+            ImGui::EndPopup();
+        }
+
         // About Popup
         if (menu_action == "About") ImGui::OpenPopup("About");
         if (ImGui::BeginPopupModal("About", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
@@ -659,17 +688,17 @@ void Renderer::drawImGui()
 
             ImGui::SetCursorPos(ImVec2(82.5, 80));
 
-            if (ImGui::Button("Cancel", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f)))
-            {
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::SameLine();
             if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f)))
             {
                 _resizeDrawImage = true;
 
                 _drawImage.imageExtent = VkExtent3D(inputImageWidth, inputImageHeight, 1);
 
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f)))
+            {
                 ImGui::CloseCurrentPopup();
             }
 
