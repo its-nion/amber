@@ -40,3 +40,4 @@
 
 #include "../util/preprocessor-directives.h"
 #include "../util/structs.h"
+#include "../util/imgui-additional-widgets.h"

@@ -152,6 +152,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\util\imgui-additional-widgets.h" />
     <ClInclude Include="src\util\libraries.h" />
     <ClInclude Include="src\util\preprocessor-directives.h" />
     <ClInclude Include="src\util\structs.h" />

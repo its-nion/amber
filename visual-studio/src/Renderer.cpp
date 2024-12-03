@@ -253,6 +253,13 @@ void Renderer::drawImGui()
             drawList->ChannelsSetCurrent(1);
 
             ImGui::Text("UV");
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(228.0);
+            if (ImGui::SmallButton("Default##UV"))
+            {
+                _cpc.uv_scale = 2.0;
+                _cpc.uv_offset = glm::vec2(0.0, 0.0);
+            };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
 
@@ -268,8 +275,8 @@ void Renderer::drawImGui()
                 ImGui::Text("Scale");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::InputFloat("##Scale", &_cpc.uv_scale, 0.0, 0.0, "%.1f", 0);
-
+                ImGui::DragFloat("##Scale", &_cpc.uv_scale, 0.01f, 0.0f, 100.0f, "%.2f", ImGuiSliderFlags_ClampOnInput);
+                
                 // Offset
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
@@ -277,16 +284,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Offset");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::InputFloat2("##Offset", (float*)&_cpc.uv_offset, "%.1f", 0);
-
-                // Evolution
-                ImGui::TableNextRow();
-                ImGui::TableNextColumn();
-                ImGui::AlignTextToFramePadding();
-                ImGui::Text("Evolution");
-                ImGui::TableNextColumn();
-                ImGui::SetNextItemWidth(-1.0);
-                ImGui::InputFloat2("##Evolution", (float*)&_cpc.uv_offset, "%.1f", 0);
+                ImGui::DragFloat2("##Offset", (float*)&_cpc.uv_offset, 0.01f, -1000.0f, 1000.0f, "%.2f", ImGuiSliderFlags_ClampOnInput);
 
                 ImGui::EndTable();
             }
@@ -321,6 +319,17 @@ void Renderer::drawImGui()
             drawList->ChannelsSetCurrent(1);
 
             ImGui::Text("Fractal Brownian Motion");
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(228.0);
+            if (ImGui::SmallButton("Default##FBM"))
+            {
+                _cpc.fbm_octaves = 8;
+                _cpc.fbm_amplitude = 0.5;
+                _cpc.fbm_frequency = 1.0;
+                _cpc.fbm_lacunarity = 1.0;
+                _cpc.fbm_gain = 0.5;
+                _cpc.fbm_shift = 2.0;
+            };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
 
@@ -336,7 +345,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Octaves");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::DragInt("##Octaves", &_cpc.fbm_octaves, 0.1, 1, INT_MAX, "%d", 0);
+                ImGui::SliderInt("##Octaves", &_cpc.fbm_octaves, 1, 10, "%d", 0);
 
                 // Amplitude
                 ImGui::TableNextRow();
@@ -352,6 +361,8 @@ void Renderer::drawImGui()
                 ImGui::TableNextColumn();
                 ImGui::AlignTextToFramePadding();
                 ImGui::Text("Frequenzy");
+                ImGui::SameLine();
+                ImGui::CustomHelpMarker("How much detail the\nimage contains");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
                 ImGui::DragFloat("##Frequenzy", &_cpc.fbm_frequency, 0.001, 0.0, 2.0, "%.03f", 0);
@@ -417,6 +428,21 @@ void Renderer::drawImGui()
             drawList->ChannelsSetCurrent(1);
 
             ImGui::Text("Warp");
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(228.0);
+            if (ImGui::SmallButton("Default##WARP"))
+            {
+                _cpc.warp_iterations = 3;
+                _cpc.warp_strength = 3;
+                _cpc.warp_offset = glm::vec2(0.0, 0.0);
+                _cpc.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 0.0);
+                _cpc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
+                _cpc.warp_colorShade = 3;
+                _cpc.warp_colorBalance = 0.0;
+                _cpc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
+                _cpc.warp_tintShade = 8;
+                _cpc.warp_tintStrength = 0.1;
+            };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
 
@@ -450,7 +476,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Primary Color");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::ColorEdit3("##Primary Color", (float*)&_cpc.warp_primaryColor, 0);
+                ImGui::ColorEdit3("##Primary Color", (float*)&_cpc.warp_primaryColor, ImGuiColorEditFlags_NoInputs);
 
                 // Secondary Color
                 ImGui::TableNextRow();
@@ -459,7 +485,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Secondary Color");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::ColorEdit3("##Secondary Color", (float*)&_cpc.warp_secondaryColor, 0);
+                ImGui::ColorEdit3("##Secondary Color", (float*)&_cpc.warp_secondaryColor, ImGuiColorEditFlags_NoInputs);
 
                 // Color Shade
                 ImGui::TableNextRow();
@@ -486,7 +512,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Tint Color");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::ColorEdit3("##Tint Color", (float*)&_cpc.warp_tintColor, 0);
+                ImGui::ColorEdit3("##Tint Color", (float*)&_cpc.warp_tintColor, ImGuiColorEditFlags_NoInputs);
 
                 // Tint Shade
                 ImGui::TableNextRow();
@@ -1063,17 +1089,18 @@ void Renderer::initValues()
     _rta.initRendertimes(100);
 
     // Gui Values
-    _cpc.uv_scale = 1.0;
+    _cpc.uv_scale = 2.0;
+    _cpc.uv_offset = glm::vec2(0.0, 0.0);
+
     _cpc.fbm_octaves = 8;
     _cpc.fbm_amplitude = 0.5;
     _cpc.fbm_frequency = 1.0;
     _cpc.fbm_lacunarity = 1.0;
     _cpc.fbm_gain = 0.5;
     _cpc.fbm_shift = 2.0;
-    _cpc.time = 0.0f;
+
     _cpc.warp_iterations = 3;
     _cpc.warp_strength = 3;
-    _cpc.uv_offset = glm::vec2(0.0, 0.0);
     _cpc.warp_offset = glm::vec2(0.0, 0.0);
     _cpc.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 0.0);
     _cpc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
@@ -1082,6 +1109,8 @@ void Renderer::initValues()
     _cpc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
     _cpc.warp_tintShade = 8;
     _cpc.warp_tintStrength = 0.1;
+
+    _cpc.time = 0.0f;
 }
 
 void Renderer::create_swapchain(uint32_t width, uint32_t height)

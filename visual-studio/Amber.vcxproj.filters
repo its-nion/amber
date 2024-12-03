@@ -84,6 +84,9 @@
     <ClInclude Include="third-party\include\tinyfiledialogs\tinyfiledialogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\util\imgui-additional-widgets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
