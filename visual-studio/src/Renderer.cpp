@@ -226,6 +226,10 @@ void Renderer::drawImGui()
         }
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0, 0.0, 0.0, 0.0));
+        if (ImGui::Button("Help")) menu_action = "Help";
+        ImGui::PopStyleColor();
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0, 0.0, 0.0, 0.0));
         if (ImGui::Button("About")) menu_action = "About";
         ImGui::PopStyleColor();
 
@@ -605,9 +609,19 @@ void Renderer::drawImGui()
 
             ImGui::SetCursorPos(imagePos);
 
+            // Show rendered image or text
             if (_drawImage.imageView != NULL)
             {
                 ImGui::Image(_drawImageTexture, imageSize);
+            }
+            else 
+            {
+                ImGui::SetCursorPos(ImVec2(viewportSize.x / 2.0 - 175.0, viewportSize.y / 2.0 - 15.0));
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2, 0.2, 0.2, 1.0));
+                ImGui::SetWindowFontScale(1.5f);
+                ImGui::Text("Create new image under File / New");
+                ImGui::SetWindowFontScale(1.0f);
+                ImGui::PopStyleColor();
             }
 
             ImGui::End();
@@ -644,6 +658,29 @@ void Renderer::drawImGui()
             );
 
             ImGui::SetCursorPos(ImVec2(217.5, 72.5));
+            if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f))) ImGui::CloseCurrentPopup();
+
+            ImGui::EndPopup();
+        }
+
+        // Help Popup
+        if (menu_action == "Help") ImGui::OpenPopup("Help");
+        if (ImGui::BeginPopupModal("Help", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::SetWindowSize(ImVec2(300, 160), 0);
+            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 300.0) / 2.0, (imGuiViewport->WorkSize.y - 160.0) / 2.0), 0);
+
+            ImGui::Text(
+                "- Each property can be fine tuned with\n"
+                "  ctrl + left click\n"
+                "- Properties without sliders can be\n"
+                "  changed by clicking and dragging\n"
+                "  them to the left/right\n"
+                "- Exporting images may take some\n"
+                "  time\n"
+            );
+
+            ImGui::SetCursorPos(ImVec2(217.5, 132.5));
             if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f))) ImGui::CloseCurrentPopup();
 
             ImGui::EndPopup();
