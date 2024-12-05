@@ -26,7 +26,7 @@ layout( push_constant ) uniform constants
     int warp_strength;
     int warp_colorShade;
     int warp_tintShade;
-    float warp_colorBalance;
+    int warp_colorBalance;
     float warp_tintStrength;
     float th;
     float fo;
@@ -118,7 +118,6 @@ float fbm(vec2 x) {
 
 vec3 warpColor(vec2 x) {
     vec2 offset = vec2(1.23, 4.56);
-    //vec3 colorTint = vec3(0, 0, 0);
 
     vec2 q = vec2( fbm( x + offset),
                    fbm( x + 2 * offset));
@@ -126,23 +125,19 @@ vec3 warpColor(vec2 x) {
     for (int i = 0; i < PushConstants.warp_iterations; i++) {
         q = vec2( fbm( x + q * PushConstants.warp_strength + (i * offset)),
                   fbm( x + q * PushConstants.warp_strength + (2 * i * offset) ) );
-
-        //  colorTint = mix(colorTint,
-        //                  PushConstants.tintColor.xyz,
-        //                  clamp(length(q), 0.0, 1.0));
     }
 
     float f = fbm( x + q * PushConstants.warp_strength );
 
-    float powF = pow(f, PushConstants.warp_colorShade);
-
     vec3 color = mix(PushConstants.warp_primaryColor.xyz,
                      PushConstants.warp_secondaryColor.xyz,
-                     clamp(f, 0.0, 1.0));
+                     clamp(pow(f, PushConstants.warp_colorBalance), 0.0, 1.0));
+                     //clamp(f, 0.0, 1.0));
+                     //clamp(f*f*f*f * PushConstants.warp_colorBalance, 0.0, 1.0));
                      //clamp(pow(f, PushConstants.warp_colorShade) * PushConstants.warp_colorBalance, 0.0, 1.0));
                      //clamp(pow(f, PushConstants.warp_colorShade) + 0.25 * pow(f, PushConstants.warp_colorShade) / PushConstants.warp_colorShade + PushConstants.warp_colorBalance, 0.0, 1.0));
                      //clamp(smoothstep(0.0, 1.0, pow(f, PushConstants.warp_colorShade)) * PushConstants.warp_colorStrength, 0.0, 1.0));
-                     //clamp((f*f*f*f + 0.5 * f * f * f + 0.25 * f * f + 0.1 * f) * PushConstants.warp_colorStrength, 0.0, 1.0));
+                     //clamp((f*f*f + 0.5 * f * f + 0.25 * f) * PushConstants.warp_colorBalance, 0.0, 1.0));
                      //clamp(pow(f, PushConstants.warp_colorShade) * PushConstants.warp_colorStrength, 0.0, 1.0));
 
     color = mix(color,

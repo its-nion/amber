@@ -14,7 +14,7 @@ struct ComputePushConstants {
     int warp_strength;
     int warp_colorShade;
     int warp_tintShade;
-    float warp_colorBalance;
+    int warp_colorBalance;
     float warp_tintStrength;
     float th;
     float fo;

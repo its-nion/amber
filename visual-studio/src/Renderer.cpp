@@ -358,7 +358,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Amplitude");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::DragFloat("##Amplitude", &_cpc.fbm_amplitude, 0.001, 0.0, 1.0, "%.3f", 0);
+                ImGui::DragFloat("##Amplitude", &_cpc.fbm_amplitude, 0.001, 0.0, 10.0, "%.3f", 0);
 
                 // Frequenzy
                 ImGui::TableNextRow();
@@ -369,7 +369,7 @@ void Renderer::drawImGui()
                 ImGui::CustomHelpMarker("How much detail the\nimage contains");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::DragFloat("##Frequenzy", &_cpc.fbm_frequency, 0.001, 0.0, 2.0, "%.03f", 0);
+                ImGui::DragFloat("##Frequenzy", &_cpc.fbm_frequency, 0.001, 0.0, 10.0, "%.03f", 0);
 
                 // Lacunarity
                 ImGui::TableNextRow();
@@ -378,7 +378,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Lacunarity");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::DragFloat("##Lacunarity", &_cpc.fbm_lacunarity, 0.001, 0.0, 2.0, "%.03f", 0);
+                ImGui::DragFloat("##Lacunarity", &_cpc.fbm_lacunarity, 0.001, 0.0, 10.0, "%.03f", 0);
 
                 // Gain
                 ImGui::TableNextRow();
@@ -387,7 +387,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Gain");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::DragFloat("##Gain", &_cpc.fbm_gain, 0.001, 0.0, 1.0, "%.03f", 0);
+                ImGui::DragFloat("##Gain", &_cpc.fbm_gain, 0.001, 0.0, 10.0, "%.03f", 0);
 
                 // Shift
                 ImGui::TableNextRow();
@@ -396,7 +396,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Shift");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::DragFloat("##Shift", &_cpc.fbm_shift, 0.001, 0.0, 5.0, "%.03f", 0);
+                ImGui::DragFloat("##Shift", &_cpc.fbm_shift, 0.001, 0.0, 10.0, "%.03f", 0);
 
                 ImGui::EndTable();
             }
@@ -441,8 +441,7 @@ void Renderer::drawImGui()
                 _cpc.warp_offset = glm::vec2(0.0, 0.0);
                 _cpc.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 0.0);
                 _cpc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
-                _cpc.warp_colorShade = 3;
-                _cpc.warp_colorBalance = 0.0;
+                _cpc.warp_colorBalance = 2;
                 _cpc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
                 _cpc.warp_tintShade = 8;
                 _cpc.warp_tintStrength = 0.1;
@@ -471,7 +470,9 @@ void Renderer::drawImGui()
                 ImGui::Text("Strength");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::SliderInt("##Strength", &_cpc.warp_strength, 1, 8, "%.d", 0);
+                ImGui::SliderInt("##Strength", &_cpc.warp_strength, 1, 6, "%.d", 0);
+
+                ImGui::Dummy(ImVec2(0, 5.0));
 
                 // Primary Color
                 ImGui::TableNextRow();
@@ -491,15 +492,6 @@ void Renderer::drawImGui()
                 ImGui::SetNextItemWidth(-1.0);
                 ImGui::ColorEdit3("##Secondary Color", (float*)&_cpc.warp_secondaryColor, ImGuiColorEditFlags_NoInputs);
 
-                // Color Shade
-                ImGui::TableNextRow();
-                ImGui::TableNextColumn();
-                ImGui::AlignTextToFramePadding();
-                ImGui::Text("Color Shade");
-                ImGui::TableNextColumn();
-                ImGui::SetNextItemWidth(-1.0);
-                ImGui::SliderInt("##Color Shade", &_cpc.warp_colorShade, 1, 16, "%.d", 0);
-
                 // Color Balance
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
@@ -507,7 +499,9 @@ void Renderer::drawImGui()
                 ImGui::Text("Color Balance");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::SliderFloat("##Color Balance", &_cpc.warp_colorBalance, -1.0, 8.0, "%.2f", 0);
+                ImGui::SliderInt("##Color Balance", &_cpc.warp_colorBalance, 1, 3, "%.d", 0);
+
+                ImGui::Dummy(ImVec2(0, 5.0));
 
                 // Tint Color
                 ImGui::TableNextRow();
@@ -522,7 +516,7 @@ void Renderer::drawImGui()
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 ImGui::AlignTextToFramePadding();
-                ImGui::Text("Tint Shade");
+                ImGui::Text("Tint Spread");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
                 ImGui::SliderInt("##Tint Shade", &_cpc.warp_tintShade, 1, 16, "%.d", 0);
@@ -534,7 +528,7 @@ void Renderer::drawImGui()
                 ImGui::Text("Tint Strength");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
-                ImGui::SliderFloat("##Tint Strength", &_cpc.warp_tintStrength, 0.0, 16.0, "%.2f", 0);
+                ImGui::SliderFloat("##Tint Strength", &_cpc.warp_tintStrength, 0.0, 1.0, "%.2f", 0);
 
                 ImGui::EndTable();
             }
@@ -653,6 +647,7 @@ void Renderer::drawImGui()
             ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 300.0) / 2.0, (imGuiViewport->WorkSize.y - 130.0) / 2.0), 0);
 
             ImGui::Text(
+
                 "Please create a new Image before\n"
                 "trying to export!\n"
             );
@@ -1141,8 +1136,7 @@ void Renderer::initValues()
     _cpc.warp_offset = glm::vec2(0.0, 0.0);
     _cpc.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 0.0);
     _cpc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
-    _cpc.warp_colorShade = 3;
-    _cpc.warp_colorBalance = 0.0;
+    _cpc.warp_colorBalance = 2;
     _cpc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
     _cpc.warp_tintShade = 8;
     _cpc.warp_tintStrength = 0.1;
