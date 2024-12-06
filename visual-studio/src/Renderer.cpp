@@ -366,7 +366,6 @@ void Renderer::drawImGui()
                 ImGui::AlignTextToFramePadding();
                 ImGui::Text("Frequenzy");
                 ImGui::SameLine();
-                ImGui::CustomHelpMarker("How much detail the\nimage contains");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
                 ImGui::DragFloat("##Frequenzy", &_cpc.fbm_frequency, 0.001, 0.0, 10.0, "%.03f", 0);
@@ -438,13 +437,13 @@ void Renderer::drawImGui()
             {
                 _cpc.warp_iterations = 3;
                 _cpc.warp_strength = 3;
-                _cpc.warp_offset = glm::vec2(0.0, 0.0);
-                _cpc.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 0.0);
+                _cpc.warp_offset = glm::vec2(1.0, 1.0);
+                _cpc.warp_primaryColor = glm::vec4(0.04, 0.02, 0.0, 0.0);
                 _cpc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
                 _cpc.warp_colorBalance = 2;
                 _cpc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
                 _cpc.warp_tintShade = 8;
-                _cpc.warp_tintStrength = 0.1;
+                _cpc.warp_tintStrength = 0.5;
             };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
@@ -471,6 +470,15 @@ void Renderer::drawImGui()
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
                 ImGui::SliderInt("##Strength", &_cpc.warp_strength, 1, 6, "%.d", 0);
+
+                // Warp Offset
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("Offset");
+                ImGui::TableNextColumn();
+                ImGui::SetNextItemWidth(-1.0);
+                ImGui::DragFloat2("##Offset", (float*)&_cpc.warp_offset, 0.001f, -1000.0f, 1000.0f, "%.3f", ImGuiSliderFlags_ClampOnInput);
 
                 ImGui::Dummy(ImVec2(0, 5.0));
 
@@ -508,6 +516,8 @@ void Renderer::drawImGui()
                 ImGui::TableNextColumn();
                 ImGui::AlignTextToFramePadding();
                 ImGui::Text("Tint Color");
+                ImGui::SameLine();
+                ImGui::CustomHelpMarker("Can be disabled with Tint Strength = 0");
                 ImGui::TableNextColumn();
                 ImGui::SetNextItemWidth(-1.0);
                 ImGui::ColorEdit3("##Tint Color", (float*)&_cpc.warp_tintColor, ImGuiColorEditFlags_NoInputs);
@@ -611,7 +621,7 @@ void Renderer::drawImGui()
             else 
             {
                 ImGui::SetCursorPos(ImVec2(viewportSize.x / 2.0 - 175.0, viewportSize.y / 2.0 - 15.0));
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.2, 0.2, 0.2, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3, 0.3, 0.3, 1.0));
                 ImGui::SetWindowFontScale(1.5f);
                 ImGui::Text("Create new image under File / New");
                 ImGui::SetWindowFontScale(1.0f);
@@ -662,20 +672,18 @@ void Renderer::drawImGui()
         if (menu_action == "Help") ImGui::OpenPopup("Help");
         if (ImGui::BeginPopupModal("Help", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::SetWindowSize(ImVec2(300, 160), 0);
-            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 300.0) / 2.0, (imGuiViewport->WorkSize.y - 160.0) / 2.0), 0);
+            ImGui::SetWindowSize(ImVec2(450, 160), 0);
+            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 450.0) / 2.0, (imGuiViewport->WorkSize.y - 160.0) / 2.0), 0);
 
             ImGui::Text(
-                "- Each property can be fine tuned with\n"
-                "  ctrl + left click\n"
-                "- Properties without sliders can be\n"
-                "  changed by clicking and dragging\n"
-                "  them to the left/right\n"
-                "- Exporting images may take some\n"
-                "  time\n"
+                "- Each property can be fine tuned with ctrl + left click\n"
+                "- Properties without sliders can be changed by clicking and\n  dragging them to the left/right\n"
+                "- Exporting images may freeze the app for a short amount of\n  time\n"
+                "- Unrealistic resolutions may crash the app\n"
+                "- Color Boxes can be clicked for precise changes"
             );
 
-            ImGui::SetCursorPos(ImVec2(217.5, 132.5));
+            ImGui::SetCursorPos(ImVec2(330.0, 132.5));
             if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f))) ImGui::CloseCurrentPopup();
 
             ImGui::EndPopup();
@@ -1133,13 +1141,13 @@ void Renderer::initValues()
 
     _cpc.warp_iterations = 3;
     _cpc.warp_strength = 3;
-    _cpc.warp_offset = glm::vec2(0.0, 0.0);
-    _cpc.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 0.0);
+    _cpc.warp_offset = glm::vec2(1.0, 1.0);
+    _cpc.warp_primaryColor = glm::vec4(0.04, 0.02, 0.0, 0.0);
     _cpc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
     _cpc.warp_colorBalance = 2;
     _cpc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
     _cpc.warp_tintShade = 8;
-    _cpc.warp_tintStrength = 0.1;
+    _cpc.warp_tintStrength = 0.5;
 
     _cpc.time = 0.0f;
 }
