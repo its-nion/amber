@@ -12,7 +12,7 @@
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Newest Build</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/its-nion/Amber/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=">Report Bug</a>
   </p>
 </div>
 
