@@ -30,7 +30,7 @@
 
 <!-- ABOUT -->
 ## About
-Amber is a lightweight app that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick way to create beautiful visuals or placeholders with ease.
+Amber is a lightweight app that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create beautiful visuals or placeholders.
 
 ** GIF
 
