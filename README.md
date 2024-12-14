@@ -7,7 +7,7 @@
   <h3 align="center">Amber</h3>
   
   <p align="center">
-    Lightweight image generator based on warped Fractal Brownian Motion
+    A simple way to generate beautiful images
     <br />
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Newest Build</a>
@@ -22,9 +22,9 @@
 ## Table of Contents
 - [About](#about)
 - [Features](#features)
-- [Examples](#examples)
+- [Sample Pictures](#sample-pictures)
 - [Developement](#developement)
-- [Usage](#philosophy)
+- [Usage](#usage)
 
 <br />
 
@@ -46,4 +46,14 @@ Amber is a lightweight app that lets you design stunning patterns in real-time a
 <br />
 
 <!-- EXAMPLES -->
-## Examples
+## Sample Pictures
+
+<br />
+
+<!-- Developement -->
+## Developement
+
+<br />
+
+<!-- Usage -->
+## Usage
