@@ -1,4 +1,4 @@
-<!-- PROJECT LOGO -->
+<!-- HEADER -->
 <div align="center">
   <a href="https://github.com/its-nion/Amber">
     <img src="icon/Amber.png" alt="Logo" width="100" height="100">
@@ -7,7 +7,7 @@
   <h3 align="center">Amber</h3>
   
   <p align="center">
-    A lightweight image generator based on warped Fractal Brownian Motion
+    Lightweight image generator based on warped Fractal Brownian Motion
     <br />
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Newest Build</a>
@@ -18,23 +18,32 @@
 
 <br />
 
+<!-- TOC -->
 ## Table of Contents
+- [About](#about)
 - [Features](#features)
-- [Technical Details](#example)
-- [Developement](#example)
+- [Examples](#examples)
+- [Developement](#developement)
 - [Usage](#philosophy)
-- [Acknowledgements](#something)
 
 <br />
 
+<!-- ABOUT -->
+## About
+Amber is a lightweight app that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick way to create beautiful visuals or placeholders with ease.
+
+** GIF
+
+<br />
+
+<!-- FEATURES -->
 ## Features
-Amber is a simple image generator that allows users to customize and export images. It also is: 
-- **Lightweight** · no Installation and not much space
-- **Easy to use** · intuitive ui design
-- **Customizable** · everything can be adapted
-- **High Quality** · Any resolution is possible
+- **Lightweight** · No installation or large files required
+- **Easy to use** · Simple, user-friendly interface
+- **Customizable** · Full control over every design element
+- **High Quality** · Images are drawn directly in your prefered resolution
 
 <br />
 
-## Technical Details
-Amber was build...
+<!-- EXAMPLES -->
+## Examples
