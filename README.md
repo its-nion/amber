@@ -22,7 +22,7 @@
 ## Table of Contents
 - [About](#about)
 - [Features](#features)
-- [Sample Pictures](#sample-pictures)
+- [Sample Images](#sample-images)
 - [Developement](#developement)
 - [Usage](#usage)
 
@@ -45,8 +45,8 @@ Amber is a lightweight app that lets you design stunning patterns in real-time a
 
 <br />
 
-<!-- EXAMPLES -->
-## Sample Pictures
+<!-- SAMPLE IMAGES -->
+## Sample Images
 
 <br />
 
