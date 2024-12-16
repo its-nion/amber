@@ -51,8 +51,8 @@ A few images are shown below to illustrate Amber's possibilities
 
 <div style="display: flex", align="center">
   <img src="images/red-1.png" alt="Image 1" style="width: 49%">
-  &nbsp;&nbsp;
-  <img src="images/red-1.png" alt="Image 2" style="width: 49%">
+  <img src="images/white-1.png" alt="Image 2" style="width: 49%">
+  <img src="images/desert-1.png" alt="Image 2" style="width: 99%">
 </div>
 
 <br />
