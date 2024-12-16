@@ -47,6 +47,13 @@ Amber is a lightweight app that lets you design stunning patterns in real-time a
 
 <!-- SAMPLE IMAGES -->
 ## Sample Images
+A few images are shown below to illustrate Amber's possibilities
+
+<div style="display: flex", align="center">
+  <img src="images/red-1.png" alt="Image 1" style="width: 49%">
+  &nbsp;&nbsp;
+  <img src="images/red-1.png" alt="Image 2" style="width: 49%">
+</div>
 
 <br />
 
