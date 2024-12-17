@@ -30,10 +30,10 @@
 
 <!-- ABOUT -->
 ## About
-Amber is a lightweight application that allows you to design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create beautiful visuals or placeholders.
+Amber is a lightweight application that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create abstract visuals or placeholders.
 
 <div style="display: flex", align="center">
-  <img src="images/about-1.gif" alt="Image 0" style="width: 100%">
+  <img src="images/about-1.gif" alt="about-gif" style="width: 100%">
 </div>
 
 <br />
@@ -50,11 +50,11 @@ Amber is a lightweight application that allows you to design stunning patterns i
 <!-- SAMPLE IMAGES -->
 ## Sample Images
 <div style="display: flex", align="center">
-  <img src="images/red-1.png" alt="Image 1" style="width: 49%">
-  <img src="images/white-1.png" alt="Image 2" style="width: 49%">
-  <img src="images/desert-1.png" alt="Image 3" style="width: 99%">
-  <img src="images/blue-1.png" alt="Image 4" style="width: 49%">
-  <img src="images/blue-2.png" alt="Image 5" style="width: 49%">
+  <img src="images/red-1.png" alt="red image" style="width: 49%">
+  <img src="images/white-1.png" alt="white image" style="width: 49%">
+  <img src="images/desert-1.png" alt="desert image" style="width: 99%">
+  <img src="images/blue-1.png" alt="water image" style="width: 49%">
+  <img src="images/blue-2.png" alt="cloud image" style="width: 49%">
 </div>
 
 <br />
