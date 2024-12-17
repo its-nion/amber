@@ -32,7 +32,9 @@
 ## About
 Amber is a lightweight application that allows you to design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create beautiful visuals or placeholders.
 
-** GIF
+<div style="display: flex", align="center">
+  <img src="images/about-1.gif" alt="Image 0" style="width: 100%">
+</div>
 
 <br />
 
