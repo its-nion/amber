@@ -25,12 +25,13 @@
 - [Sample Images](#sample-images)
 - [Developement](#developement)
 - [Usage](#usage)
+- [Credits](#credits)
 
 <br />
 
 <!-- ABOUT -->
 ## About
-Amber is a lightweight application that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create beautiful visuals and placeholders.
+Amber is a lightweight image generator that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create beautiful visuals.
 
 <div style="display: flex", align="center">
   <img src="images/about-1.gif" alt="about-gif" style="width: 100%">
@@ -41,9 +42,9 @@ Amber is a lightweight application that lets you design stunning patterns in rea
 <!-- FEATURES -->
 ## Features
 - **Lightweight** · No installation or large files required
-- **Easy to use** · Simple, user-friendly interface
 - **Customizable** · Full control over every design element
 - **High Quality** · Images are drawn directly in your preferred resolution
+- **Free** · No cost whatsoever!
 
 <br />
 
@@ -61,8 +62,23 @@ Amber is a lightweight application that lets you design stunning patterns in rea
 
 <!-- Developement -->
 ## Developement
+Amber is a simple C++ renderer that generates images in real-time with vulkan through a compute shader pipeline. It generates pseudo-random noise, transforms it into FBM-noise, and uses warping and adjustments to create visually appealing outputs. These can be saved in PNG format, with variables adjusted dynamically via Push-Constants.
+
 
 <br />
 
 <!-- Usage -->
 ## Usage
+Amber is currently only supported on windows. Follow these steps to run it:
+1. Go to the [latest release page](https://github.com/its-nion/amber/releases/latest)
+2. Download ``Amber.exe``
+3. Run ``Amber.exe``
+
+<br />
+
+<!-- Credits -->
+## Credits
+Special thanks to the individuals below, whose articles served as inspiration and played a key role in making this project a reality
+- **Victor Blanco** with his [Vulkan Guide](https://vkguide.dev/)
+- **Patricio Gonzalez Vivo & Jen Lowe** with their article about [Fractal Brownian Motion](https://thebookofshaders.com/13/)
+- **Inigo Quilez** with his article about [Domain Warping](https://iquilezles.org/articles/warp/)
