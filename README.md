@@ -36,6 +36,8 @@
 ## About
 Amber is a lightweight image generator that lets you design stunning patterns in real-time and export them as high-quality PNGs. It’s a quick and easy way to create beautiful visuals.
 
+<br />
+
 <div style="display: flex", align="center">
   <img src="images/about-1.gif" alt="about-gif" style="width: 100%">
 </div>
@@ -113,7 +115,7 @@ git clone https://github.com/its-nion/amber.git
 <br />
 
 > [!Note]  
-> Before building the project, you need to have the Vulkan SDK installed. All other libraries should be included in the "third-party" folder, but make sure that all dependencies are linked correctly.
+> To build the project, you need to have the Vulkan SDK installed. All other libraries should be included in the "third-party" folder, but make sure that all dependencies are linked correctly.
 
 <br />
 
