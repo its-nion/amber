@@ -23,9 +23,12 @@
 - [About](#about)
 - [Features](#features)
 - [Sample Images](#sample-images)
-- [Developement](#developement)
-- [Usage](#usage)
-- [Credits](#credits)
+- [Used Technologies](#used-technologies)
+- [How It Works](#how-it-works)
+- [Running Amber](#running-amber)
+- [Building Amber](#building-amber)
+- [Future Improvements](#future-improvements)
+- [Acknowledgments](#acknowledgments)
 
 <br />
 
@@ -60,24 +63,70 @@ Amber is a lightweight image generator that lets you design stunning patterns in
 
 <br />
 
-<!-- Developement -->
-## Developement
-Amber is a simple C++ renderer that generates images in real-time with vulkan through a compute shader pipeline. It generates pseudo-random noise, transforms it into FBM-noise, and uses warping and adjustments to create visually appealing outputs. These can be saved in PNG format, with variables adjusted dynamically via Push-Constants.
+<!-- Used Technologies -->
+## Used Technologies
+Amber utilizes the following libraries and frameworks:
+- Vulkan SDK - Low-level graphics API for high-performance rendering
+- GLFW - Window and input handling
+- GLM - Mathematics library for vector and matrix operations
+- ImGui - Simple user interface library
+- stb_image - Image creation and export
+- VkBootstrap - Simplified Vulkan setup
+- Vulkan Memory Allocator (VMA) - Efficient memory management for Vulkan
+- Bin2cpp - C++ embedding library
 
 
 <br />
 
-<!-- Usage -->
-## Usage
+<!-- How It Works -->
+## How It Works
+Amber generates images using a Vulkan-based compute shader pipeline. At startup, it initializes Vulkan, sets up a swapchain for rendering, and configures descriptor sets and synchronization mechanisms. The application then builds a dedicated compute pipeline to process image data in parallel on the GPU. Users can interact with the ImGui interface to modify rendering parameters in real time through push-constants.
+
+The compute shader executes a warped Fractal Brownian Motion (FBM) algorithm, which layers multiple octaves of procedural noise. By applying a nonlinear warping function, the shader distorts the noise pattern, producing complex organic textures. This enables users to create a wide variety of abstract visuals with smooth, natural variations.
+
+<br />
+
+<!-- Running Amber -->
+## Running Amber
 Amber is currently only supported on windows. Follow these steps to run it:
+
 1. Go to the [latest release page](https://github.com/its-nion/amber/releases/latest)
-2. Download ``Amber.exe``
-3. Run ``Amber.exe``
+2. Download and run ``Amber.exe``
+3. Customize your image via the user interface on the right
+4. Hover over "File" and press "Export" to save your image
 
 <br />
 
-<!-- Credits -->
-## Credits
+> [!Warning]  
+> The executable file got flagged as a virus on my pc, probably because it's a singular small file. If that happens to you aswell, you can either quarantine the file from the windows defender firewall or build the file yourself, which is explained in the next step.
+
+<br />
+
+## Building Amber
+1. Clone the repository:
+```
+git clone https://github.com/its-nion/amber.git
+```
+2. Go into the "visual-studio" folder and open "Amber.sln" with Visual Studio
+3. Build/Run the project
+
+<br />
+
+> [!Note]  
+> Before building the project, you need to have the Vulkan SDK installed. All other libraries should be included in the "third-party" folder, but make sure that all dependencies are linked correctly.
+
+<br />
+
+<!-- Future Improvements -->
+## Future Improvements
+- Expand shader functionality for additional visual effects
+- Clean up project structure
+- Additional export formats
+
+<br />
+
+<!-- Acknowledgments -->
+## Acknowledgments
 Special thanks to the individuals below, whose articles served as inspiration and played a key role in making this project a reality
 - **Victor Blanco** with his [Vulkan Guide](https://vkguide.dev/)
 - **Patricio Gonzalez Vivo & Jen Lowe** with their article about [Fractal Brownian Motion](https://thebookofshaders.com/13/)
