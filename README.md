@@ -68,21 +68,20 @@ Amber is a lightweight image generator that lets you design stunning patterns in
 <!-- Used Technologies -->
 ## Used Technologies
 Amber utilizes the following libraries and frameworks:
-- Vulkan SDK - Low-level graphics API for high-performance rendering
-- GLFW - Window and input handling
-- GLM - Mathematics library for vector and matrix operations
-- ImGui - Simple user interface library
-- stb_image - Image creation and export
-- VkBootstrap - Simplified Vulkan setup
-- Vulkan Memory Allocator (VMA) - Efficient memory management for Vulkan
-- Bin2cpp - C++ embedding library
-
+- [Vulkan SDK](https://www.lunarg.com/vulkan-sdk/) – Rendering and execution of compute shaders on the gpu
+- [GLFW](https://www.glfw.org/) – Cross-platform window and input handling
+- [GLM](https://github.com/g-truc/glm) – Mathematical functions and data structures for graphics computations
+- [ImGui](https://github.com/ocornut/imgui) – User interface for the editor
+- [stb_image](https://github.com/nothings/stb) – Image loading and processing
+- [VkBootstrap](https://github.com/charles-lunarg/vk-bootstrap) – Simplifies Vulkan initialization
+- [Vulkan Memory Allocator (VMA)](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator) – Manages efficient GPU memory allocation
+- [Bin2cpp](https://github.com/end2endzone/bin2cpp) – Embedding shaders and images directly into the application as C++ headers
 
 <br />
 
 <!-- How It Works -->
 ## How It Works
-Amber generates images using a Vulkan-based compute shader pipeline. At startup, it initializes Vulkan, sets up a swapchain for rendering, and configures descriptor sets and synchronization mechanisms. The application then builds a dedicated compute pipeline to process image data in parallel on the GPU. Users can interact with the ImGui interface to modify rendering parameters in real time through push-constants.
+Amber generates images using a Vulkan-based compute shader pipeline. At startup, it initializes Vulkan, sets up a swapchain and other required vulkan objects, and configures descriptor sets and synchronization mechanisms. The application then builds a dedicated compute pipeline to render images on the GPU. Users can interact with the ImGui interface to modify rendering parameters in real time through push-constants.
 
 The compute shader executes a warped Fractal Brownian Motion (FBM) algorithm, which layers multiple octaves of procedural noise. By applying a nonlinear warping function, the shader distorts the noise pattern, producing complex organic textures. This enables users to create a wide variety of abstract visuals with smooth, natural variations.
 
