@@ -1,20 +1,23 @@
-
 #pragma once
 
 #include "util/libraries.h"
 
-class Window
-{
-    public:
-        void create(const char* name, const int width, const int height);
-        void destroy();
+/// <summary>
+/// A simple GLFW wrapper for window creation and management
+/// </summary>
+class Window {
+public:
+    Window(const char* name, int width, int height);
+    ~Window();
 
-        bool shouldClose();
-        void update();
+    void update() const;
 
-        GLFWwindow* getWindowHandle();
+    bool shouldClose() const;
+    GLFWwindow* getWindowHandle() const;
 
-    private:
-        GLFWwindow* _windowHandle;
+private:
+    GLFWwindow* windowHandle;
+
+    void centerWindow();
+	void setWindowIcon();
 };
-

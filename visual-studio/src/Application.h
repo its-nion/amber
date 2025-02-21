@@ -1,20 +1,19 @@
-
 #pragma once
-
-#include "util/libraries.h"
 
 #include "Window.h"
 #include "Renderer.h"
 
+/// <summary>
+/// Top level class and event manager.
+/// </summary>
 class Application
 {
 	public:
-		void create(const char* name, const int width, const int height);
-		void update();
-		void destroy();
+		Application();
+		~Application();
 
 	private:
-		Window* _window;
-		Renderer* _renderer;
+		Window window;
+		Renderer* renderer;
 };
 

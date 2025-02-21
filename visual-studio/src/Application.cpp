@@ -1,29 +1,22 @@
-
 #include "Application.h"
 
-void Application::create(const char* name, const int width, const int height)
+Application::Application()
+    : window("amber", 1280, 720)
 {
-    _window = new Window();
-    _renderer = new Renderer();
+    renderer = new Renderer();
+    renderer->initialize((char*)"amber", window.getWindowHandle());
 
-    _window->create(name, width, height);
-    _renderer->initialize((char*)name, _window->getWindowHandle());
-}
-
-void Application::update()
-{
-    while (!_window->shouldClose())
+    // Main loop
+    while (!window.shouldClose())
     {
-        _window->update();
-        _renderer->render(_window->getWindowHandle());
+        window.update();
+        renderer->render(window.getWindowHandle());
     }
 }
 
-void Application::destroy()
+Application::~Application()
 {
-    _renderer->cleanup();
-    _window->destroy();
+    renderer->cleanup();
 
-    delete _window;
-    delete _renderer;
+    delete renderer;
 }

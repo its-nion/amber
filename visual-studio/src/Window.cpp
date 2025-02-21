@@ -1,40 +1,73 @@
-
 #include "Window.h"
-#include "../embedded-resources/amber.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-void Window::create(const char* name, const int width, const int height)
-{
-    glfwInit();
+#include "../embedded-resources/amber.h"
 
-    // Window Flags
+Window::Window(const char* name, int width, int height) {
+	// Initialize GLFW
+    if (!glfwInit()) {
+        throw std::runtime_error("Failed to initialize GLFW");
+    }
+
+    // Set window Params
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    // Create Window
-    _windowHandle = glfwCreateWindow(width, height, name, nullptr, nullptr);
+	// Create window
+    windowHandle = glfwCreateWindow(width, height, name, nullptr, nullptr);
 
-    // Window Properties
-    glfwSetWindowSizeLimits(_windowHandle, 640, 360, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    if (!windowHandle) {
+        glfwTerminate();
+        throw std::runtime_error("Failed to create GLFW window");
+    }
 
-    // Window Position
+    // Adjust window
+    glfwSetWindowSizeLimits(windowHandle, 640, 360, GLFW_DONT_CARE, GLFW_DONT_CARE);
+
+	centerWindow();
+
+    glfwMakeContextCurrent(windowHandle);
+
+    setWindowIcon();
+}
+
+Window::~Window() {
+    if (windowHandle) {
+        glfwDestroyWindow(windowHandle);
+    }
+
+    glfwTerminate();
+}
+
+bool Window::shouldClose() const {
+    return glfwWindowShouldClose(windowHandle);
+}
+
+void Window::update() const {
+    glfwPollEvents();
+}
+
+GLFWwindow* Window::getWindowHandle() const {
+    return windowHandle;
+}
+
+void Window::centerWindow()
+{
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    // Get the window size
     int windowWidth, windowHeight;
-    glfwGetWindowSize(_windowHandle, &windowWidth, &windowHeight);
+    glfwGetWindowSize(windowHandle, &windowWidth, &windowHeight);
 
     int posX = (mode->width - windowWidth) / 2;
     int posY = (mode->height - windowHeight) / 2;
 
-    glfwSetWindowPos(_windowHandle, posX, posY);
+    glfwSetWindowPos(windowHandle, posX, posY);
+}
 
-    // Make the window's context current
-    glfwMakeContextCurrent(_windowHandle);
-
-    // Window Icon
+void Window::setWindowIcon()
+{
     const bin2cpp::File& pngFile = bin2cpp::getAmberPngFile();
     size_t pngSize = pngFile.getSize();
     const unsigned char* pngData = reinterpret_cast<const unsigned char*>(pngFile.getBuffer());
@@ -42,27 +75,12 @@ void Window::create(const char* name, const int width, const int height)
     int pngWidth, pngHeight, pngChannels;
     unsigned char* data = stbi_load_from_memory(pngData, static_cast<int>(pngSize), &pngWidth, &pngHeight, &pngChannels, 4);
 
-    GLFWimage icon = { pngWidth, pngHeight, data };
-    glfwSetWindowIcon(_windowHandle, 1, &icon);
-}
-
-void Window::destroy()
-{
-    glfwDestroyWindow(_windowHandle);
-    glfwTerminate();
-}
-
-bool Window::shouldClose()
-{
-    return (glfwWindowShouldClose(_windowHandle));
-}
-
-void Window::update()
-{
-    glfwPollEvents();
-}
-
-GLFWwindow* Window::getWindowHandle()
-{
-    return _windowHandle;
+    if (data) {
+        GLFWimage icon = { pngWidth, pngHeight, data };
+        glfwSetWindowIcon(windowHandle, 1, &icon);
+        stbi_image_free(data);
+    }
+    else {
+        throw std::runtime_error("Failed to load window icon");
+    }
 }
