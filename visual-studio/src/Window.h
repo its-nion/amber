@@ -8,12 +8,12 @@
 class Window {
 public:
     Window(const char* name, int width, int height);
-    ~Window();
+	~Window();
 
-    void update() const;
+    void PollEvents() const;
+    bool ShouldClose() const;
 
-    bool shouldClose() const;
-    GLFWwindow* getWindowHandle() const;
+    GLFWwindow* GetWindowHandle() const;
 
 private:
     GLFWwindow* windowHandle;

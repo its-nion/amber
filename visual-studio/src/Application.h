@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "VulkanContext.h"
 #include "Renderer.h"
 
 /// <summary>
@@ -12,8 +13,11 @@ class Application
 		Application();
 		~Application();
 
+		void Run();
+
 	private:
-		Window window;
-		Renderer* renderer;
+		Window* _window;
+		VulkanContext* _vulkanContext;
+		//Renderer* _renderer;
 };
 

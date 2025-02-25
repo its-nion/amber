@@ -1,22 +1,21 @@
 #include "Application.h"
 
 Application::Application()
-    : window("amber", 1280, 720)
 {
-    renderer = new Renderer();
-    renderer->initialize((char*)"amber", window.getWindowHandle());
-
-    // Main loop
-    while (!window.shouldClose())
-    {
-        window.update();
-        renderer->render(window.getWindowHandle());
-    }
+    _window = new Window("amber", 1280, 720);
+    _vulkanContext = new VulkanContext((char*)"amber", _window->GetWindowHandle());
 }
 
 Application::~Application()
 {
-    renderer->cleanup();
+	delete _vulkanContext;
+	delete _window;
+}
 
-    delete renderer;
+void Application::Run()
+{
+    while (!_window->ShouldClose())
+    {
+        _window->PollEvents();
+    }
 }

@@ -5,8 +5,9 @@
 
 #include "../embedded-resources/amber.h"
 
-Window::Window(const char* name, int width, int height) {
-	// Initialize GLFW
+Window::Window(const char* name, int width, int height)
+{
+    // Initialize GLFW
     if (!glfwInit()) {
         throw std::runtime_error("Failed to initialize GLFW");
     }
@@ -15,7 +16,7 @@ Window::Window(const char* name, int width, int height) {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-	// Create window
+    // Create window
     windowHandle = glfwCreateWindow(width, height, name, nullptr, nullptr);
 
     if (!windowHandle) {
@@ -26,14 +27,15 @@ Window::Window(const char* name, int width, int height) {
     // Adjust window
     glfwSetWindowSizeLimits(windowHandle, 640, 360, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
-	centerWindow();
-
-    glfwMakeContextCurrent(windowHandle);
+    centerWindow();
 
     setWindowIcon();
+
+    glfwMakeContextCurrent(windowHandle);
 }
 
-Window::~Window() {
+Window::~Window()
+{
     if (windowHandle) {
         glfwDestroyWindow(windowHandle);
     }
@@ -41,15 +43,15 @@ Window::~Window() {
     glfwTerminate();
 }
 
-bool Window::shouldClose() const {
-    return glfwWindowShouldClose(windowHandle);
-}
-
-void Window::update() const {
+void Window::PollEvents() const {
     glfwPollEvents();
 }
 
-GLFWwindow* Window::getWindowHandle() const {
+bool Window::ShouldClose() const {
+    return glfwWindowShouldClose(windowHandle);
+}
+
+GLFWwindow* Window::GetWindowHandle() const {
     return windowHandle;
 }
 
