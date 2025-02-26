@@ -5,19 +5,20 @@
 /// <summary>
 /// A simple GLFW wrapper for window creation and management
 /// </summary>
-class Window {
-public:
-    Window(const char* name, int width, int height);
-	~Window();
+class Window 
+{
+    public:
+        Window(const char* name, int width, int height);
+	    ~Window();
 
-    void PollEvents() const;
-    bool ShouldClose() const;
+        void PollEvents() const;
+        bool ShouldClose() const;
 
-    GLFWwindow* GetWindowHandle() const;
+        GLFWwindow* GetWindowHandle() const;
 
-private:
-    GLFWwindow* windowHandle;
+    private:
+        GLFWwindow* windowHandle;
 
-    void centerWindow();
-	void setWindowIcon();
+        void centerWindow();
+	    void setWindowIcon();
 };

@@ -1,6 +1,49 @@
 #include "VulkanContext.h"
 
+// VMA library
+#define VMA_IMPLEMENTATION
+#include "vma/vk_mem_alloc.h"
+
 VulkanContext::VulkanContext(char* appName, GLFWwindow* windowHandle)
+{
+	InitVulkan(appName, windowHandle);
+
+	InitSwapchain(windowHandle);
+
+	//InitCommandStructure();
+}
+
+VulkanContext::~VulkanContext()
+{
+    // Wait until GPU finished everything
+    vkDeviceWaitIdle(_device);
+
+    // Destroy old swapchain
+    vkDestroySwapchainKHR(_device, _swapchain, nullptr);
+
+    // Destroy old swapchain resources
+    for (int i = 0; i < _swapchainImageViews.size(); i++) {
+
+        vkDestroyImageView(_device, _swapchainImageViews[i], nullptr);
+    }
+
+    // Destroy surface
+    vkDestroySurfaceKHR(_instance, _surface, nullptr);
+
+	// Destroy memory allocator
+    vmaDestroyAllocator(_allocator);
+
+	// Destroy logical device (cant delete physical device)
+    vkDestroyDevice(_device, nullptr);
+
+	// Destroy debug messenger
+    vkb::destroy_debug_utils_messenger(_instance, _debugMessenger);
+
+	// Destroy vulkan instance
+    vkDestroyInstance(_instance, nullptr);
+}
+
+void VulkanContext::InitVulkan(char* appName, GLFWwindow* windowHandle)
 {
     vkb::InstanceBuilder builder;
 
@@ -67,18 +110,76 @@ VulkanContext::VulkanContext(char* appName, GLFWwindow* windowHandle)
     vmaCreateAllocator(&allocatorInfo, &_allocator);
 }
 
-VulkanContext::~VulkanContext()
+void VulkanContext::InitSwapchain(GLFWwindow* windowHandle)
 {
-    // Wait until GPU finished everything
+    int newWidth, newHeight;
+    glfwGetWindowSize(windowHandle, &newWidth, &newHeight);
+
+    vkb::SwapchainBuilder swapchainBuilder{ _physicalDevice,_device,_surface };
+
+    _swapchainImageFormat = VK_FORMAT_B8G8R8A8_UNORM;
+
+    vkb::Swapchain vkbSwapchain = swapchainBuilder
+        .set_desired_format(VkSurfaceFormatKHR{ .format = _swapchainImageFormat, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
+        .set_desired_present_mode(VK_PRESENT_MODE_MAILBOX_KHR)
+        .set_desired_extent(newWidth, newHeight)
+        .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+        .build()
+        .value();
+
+    _swapchainExtent = vkbSwapchain.extent;
+    _swapchain = vkbSwapchain.swapchain;
+    _swapchainImages = vkbSwapchain.get_images().value();
+    _swapchainImageViews = vkbSwapchain.get_image_views().value();
+}
+
+void VulkanContext::ResizeSwapchain(GLFWwindow* windowHandle)
+{
     vkDeviceWaitIdle(_device);
 
-    vkDestroySurfaceKHR(_instance, _surface, nullptr);
+	// Destroy old swapchain
+    vkDestroySwapchainKHR(_device, _swapchain, nullptr);
 
-    vmaDestroyAllocator(_allocator);
+    // Destroy old swapchain resources
+    for (int i = 0; i < _swapchainImageViews.size(); i++) {
 
-    vkDestroyDevice(_device, nullptr);
+        vkDestroyImageView(_device, _swapchainImageViews[i], nullptr);
+    }
 
-    vkb::destroy_debug_utils_messenger(_instance, _debugMessenger);
+	// Get new window size
+    int newWidth, newHeight;
+    glfwGetWindowSize(windowHandle, &newWidth, &newHeight);
 
-    vkDestroyInstance(_instance, nullptr);
+	// Create new swapchain
+    vkb::SwapchainBuilder swapchainBuilder{ _physicalDevice,_device,_surface };
+
+    _swapchainImageFormat = VK_FORMAT_B8G8R8A8_UNORM;
+
+    vkb::Swapchain vkbSwapchain = swapchainBuilder
+        .set_desired_format(VkSurfaceFormatKHR{ .format = _swapchainImageFormat, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
+        .set_desired_present_mode(VK_PRESENT_MODE_MAILBOX_KHR)
+        .set_desired_extent(newWidth, newHeight)
+        .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+        .build()
+        .value();
+
+    _swapchainExtent = vkbSwapchain.extent;
+    _swapchain = vkbSwapchain.swapchain;
+    _swapchainImages = vkbSwapchain.get_images().value();
+    _swapchainImageViews = vkbSwapchain.get_image_views().value();
 }
+
+//void VulkanContext::InitCommandStructure()
+//{
+//    // Create a Command Pool for commands submitted to the graphics queue
+//    VkCommandPoolCreateInfo commandPoolInfo = vkhelper::commandPoolCreateInfo(_graphicsQueueFamily, VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT);
+//
+//    VK_CHECK(vkCreateCommandPool(_device, &commandPoolInfo, nullptr, &_commandPool));
+//
+//    for (int i = 0; i < 2; i++) {
+//        // Allocate Commandbuffers for each frame
+//        VkCommandBufferAllocateInfo cmdAllocInfo = vkhelper::commandBufferAllocateInfo(_commandPool, 1);
+//
+//        VK_CHECK(vkAllocateCommandBuffers(_device, &cmdAllocInfo, &_frames[i]._mainCommandBuffer));
+//    }
+//}
