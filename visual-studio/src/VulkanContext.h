@@ -1,45 +1,61 @@
 #pragma once
 
 #include "util/libraries.h"
+
+#include "Window.h"
 #include "VkHelper.h"
 
 /// <summary>
-/// Manages all basic Vulkan objects
+/// Manages Vulkan related rendering code
 /// </summary>
-class VulkanContext 
+class VulkanContext
 {
     public:
         VulkanContext(char* appName, GLFWwindow* windowHandle);
         ~VulkanContext();
 
+        void Draw(VkCommandBuffer commandBuffer);
+        VkCommandBuffer BeginFrame();
+        void EndFrame(VkCommandBuffer commandBuffer);
+        void RenderToImage(VkCommandBuffer commandBuffer);
+        void CopyToSwapchain(VkCommandBuffer commandBuffer);
+
+        VkInstance GetInstance() const { return m_Instance; }
+        VkDevice GetDevice() const { return m_Device; }
+
     private:
-        VkInstance _instance;
-	    VkDebugUtilsMessengerEXT _debugMessenger;
-
-        VkSurfaceKHR _surface;
-
-        VkDevice _device;
-	    VkPhysicalDevice _physicalDevice;
-
-        VkQueue _graphicsQueue;
-        uint32_t _graphicsQueueFamily;
-
-        VmaAllocator _allocator;
-
-        VkSwapchainKHR _swapchain;
-        VkFormat _swapchainImageFormat;
-        std::vector<VkImage> _swapchainImages;
-        std::vector<VkImageView> _swapchainImageViews;
-        VkExtent2D _swapchainExtent;
-
-        VkCommandPool _commandPool;
-
         void InitVulkan(char* appName, GLFWwindow* windowHandle);
         void InitSwapchain(GLFWwindow* windowHandle);
         void ResizeSwapchain(GLFWwindow* windowHandle);
-        //void InitCommandStructure();
-        //void InitSyncStructure();
-        //void InitImage(VkExtent3D dimension);
-        ///void InitDescriptors();
-        //void InitComputePipeline();
+        void InitCommandStructure();
+        void CleanupVulkan();
+        void CreateComputePipeline();
+
+        // Vulkan base
+        VkInstance m_Instance;
+        VkDebugUtilsMessengerEXT m_DebugMessenger;
+
+        // Devices
+        VkPhysicalDevice m_PhysicalDevice;
+        VkDevice m_Device;
+
+        // Surface
+        VkSurfaceKHR m_Surface;
+
+        // Swapchain
+        VkSwapchainKHR m_Swapchain;
+        VkFormat m_SwapchainImageFormat;
+        std::vector<VkImage> m_SwapchainImages;
+        std::vector<VkImageView> m_SwapchainImageViews;
+        VkExtent2D m_SwapchainExtent;
+
+        // GPU queue properties
+        VkQueue m_GraphicsQueue;
+        uint32_t m_GraphicsQueueFamily;
+
+        // Vma
+        VmaAllocator m_Allocator;
+
+        // Commandpool
+        VkCommandPool m_CommandPool;
 };

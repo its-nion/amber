@@ -151,11 +151,8 @@
     <ClInclude Include="embedded-resources\warpedFbm.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\ComputePipeline.h" />
-    <ClInclude Include="src\DescriptorManager.h" />
     <ClInclude Include="src\Renderer.h" />
-    <ClInclude Include="src\ShaderManager.h" />
-    <ClInclude Include="src\UserInterface.h" />
+    <ClInclude Include="src\Ui.h" />
     <ClInclude Include="src\util\imgui-additional-widgets.h" />
     <ClInclude Include="src\util\libraries.h" />
     <ClInclude Include="src\util\preprocessor-directives.h" />
@@ -181,12 +178,9 @@
     <ClCompile Include="embedded-resources\Amber.cpp" />
     <ClCompile Include="embedded-resources\warpedFbm.cpp" />
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\ComputePipeline.cpp" />
-    <ClCompile Include="src\DescriptorManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
-    <ClCompile Include="src\ShaderManager.cpp" />
-    <ClCompile Include="src\UserInterface.cpp" />
+    <ClCompile Include="src\Ui.cpp" />
     <ClCompile Include="src\VkHelper.cpp" />
     <ClCompile Include="src\VulkanContext.cpp" />
     <ClCompile Include="src\Window.cpp" />

@@ -9,13 +9,13 @@
 class Application
 {
 	public:
-		Application();
+		Application(const char* name, int width, int height);
 		~Application();
 
 		void Run();
 
 	private:
-		Window* _window;
-		Renderer* _renderer;
+		Window* window;
+		Renderer* renderer;
 };
 

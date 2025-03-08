@@ -1,18 +1,26 @@
 #pragma once
 
+#include "util/libraries.h"
+
+#include "Window.h"
 #include "VulkanContext.h"
+#include "Ui.h"
 
 /// <summary>
-/// Manages rendering code, meaning compute shader and ui
+/// Top level renderer class
 /// </summary>
 class Renderer 
 {
-	public:
-		Renderer(char* appName, GLFWwindow* windowHandle);
-		~Renderer();
+    public:
+        Renderer(char* appName, GLFWwindow* windowHandle);
+        ~Renderer();
 
-		void DrawFrame();
+        void Draw();
 
-	private:
-		VulkanContext* _vulkanContext;
+    private:
+        int m_renderedImageCount = 0;
+        int m_imageBuffers = 2;
+
+		VulkanContext* m_VulkanContext;
+		Ui* m_Ui;
 };

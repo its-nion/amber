@@ -1,23 +1,24 @@
 #include "Application.h"
 
-Application::Application()
+Application::Application(const char* name, int width, int height)
 {
-    _window = new Window("amber", 1280, 720);
-	_renderer = new Renderer((char*)"amber", _window->GetWindowHandle());
+    window = new Window("amber", 1280, 720);
+	renderer = new Renderer((char*)"amber", window->GetWindowHandle());
 }
 
 Application::~Application()
 {
-	delete _renderer;
-	delete _window;
+	delete renderer;
+	delete window;
 }
 
 void Application::Run()
 {
-    while (!_window->ShouldClose())
-    {
-        _window->PollEvents();
+    while (!window->ShouldClose()) {
+		// Update Window Events
+        window->PollEvents();
 
-		_renderer->DrawFrame();
+		// Draw Window Content
+        renderer->Draw();
     }
 }

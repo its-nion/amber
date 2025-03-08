@@ -2,8 +2,14 @@
 
 int main(int argc, char* argv[])
 {
-    Application amber;
-	amber.Run();
+    try {
+        Application app("amber", 1280, 720);
+        app.Run();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Application encountered an error: " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
 
-	return 0;
+    return EXIT_SUCCESS;
 }
