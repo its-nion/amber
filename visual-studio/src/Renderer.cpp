@@ -2,8 +2,8 @@
 
 Renderer::Renderer(char* appName, GLFWwindow* windowHandle)
 {
-	m_VulkanContext = new VulkanContext(appName, windowHandle);
-	//m_Ui = new Ui(windowHandle);
+	m_VulkanContext = new VulkanContext(appName, windowHandle, m_imageBuffers);
+	m_Ui = new Ui(windowHandle, m_VulkanContext->GetVulkanData());
 }
 
 Renderer::~Renderer()
@@ -12,23 +12,34 @@ Renderer::~Renderer()
 	delete m_VulkanContext;
 }
 
-void Renderer::Draw()
+void Renderer::Draw(GLFWwindow* windowHandle)
 {
-    //// Start recording frame commands
-    //VkCommandBuffer commandBuffer = m_VulkanContext->BeginFrame();
+    // Process Ui events in vulkan renderer
 
-    //if (commandBuffer == VK_NULL_HANDLE) return; // Skip if frame not acquired
+	// Check if window size has changed and act accordingly
+	m_VulkanContext->CheckWindowSize(windowHandle);
+    
+	// Calculate, to which of our imagebuffers we render next
+    int frameIndex = m_renderedImageCount % m_imageBuffers;
 
-    //// Compute pass: Render to offscreen image
-    //m_VulkanContext->RenderToImage(commandBuffer);
+	// 1) Wait until the GPU has finished rendering the last frame
+	// 2) Request and get next image from the swapchain
+	// 3) Start recording draw commands for the gpu
+	// 4) Clear the swapchain image with a solid color
+	RenderData renderData = m_VulkanContext->BeginFrame(frameIndex);
+
+    // Compute pass: Render shader to offscreen image
+    m_VulkanContext->RenderComputeShader(renderData, m_Pushconstants);
+
+	// Update UI Elements
+	m_Ui->Update(renderData, m_Pushconstants);
 
     //// UI pass: Render ImGui onto the image
-    //m_Ui->NewFrame();
-    //m_Ui->Render(commandBuffer);
+	m_Ui->Render(renderData);
 
-    //// Copy the final image to the swapchain
-    //m_VulkanContext->CopyToSwapchain(commandBuffer);
+    // 1) Copy the final image to the swapchain
+    // 2) Submit and present the frame
+    m_VulkanContext->EndFrame(renderData, frameIndex);
 
-    //// Submit and present the frame
-    //m_VulkanContext->EndFrame(commandBuffer);
+	m_renderedImageCount++;
 }

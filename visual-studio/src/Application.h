@@ -15,7 +15,7 @@ class Application
 		void Run();
 
 	private:
-		Window* window;
-		Renderer* renderer;
+		Window* m_Window;
+		Renderer* m_Renderer;
 };
 

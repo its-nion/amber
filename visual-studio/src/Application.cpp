@@ -2,23 +2,23 @@
 
 Application::Application(const char* name, int width, int height)
 {
-    window = new Window("amber", 1280, 720);
-	renderer = new Renderer((char*)"amber", window->GetWindowHandle());
+    m_Window = new Window("amber", 1280, 720);
+	m_Renderer = new Renderer((char*)"amber", m_Window->GetWindowHandle());
 }
 
 Application::~Application()
 {
-	delete renderer;
-	delete window;
+	delete m_Renderer;
+	delete m_Window;
 }
 
 void Application::Run()
 {
-    while (!window->ShouldClose()) {
+    while (!m_Window->ShouldClose()) {
 		// Update Window Events
-        window->PollEvents();
+		m_Window->PollEvents();
 
 		// Draw Window Content
-        renderer->Draw();
+		m_Renderer->Draw(m_Window->GetWindowHandle());
     }
 }

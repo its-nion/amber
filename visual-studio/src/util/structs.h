@@ -1,6 +1,6 @@
 #pragma once
 
-struct ComputePushConstants {
+struct PushConstants {
     float uv_scale;
     int fbm_octaves;
     float fbm_amplitude;
@@ -22,12 +22,6 @@ struct ComputePushConstants {
     glm::vec4 warp_primaryColor;
     glm::vec4 warp_secondaryColor;
     glm::vec4 warp_tintColor;
-};
-
-struct ShaderConstants {
-    ComputePushConstants pc;
-    glm::vec2 uv_movement;
-    glm::vec2 warp_movement;
 };
 
 struct RenderTimeArray {
@@ -76,32 +70,25 @@ struct AllocatedImage
 
 struct FrameData {
     // Record commands
-    VkCommandBuffer _mainCommandBuffer;
+    VkCommandBuffer mainCommandBuffer;
 
     // Synchronisation
-    VkSemaphore _swapchainSemaphore, _renderSemaphore;
-    VkFence _renderFence;
+    VkSemaphore swapchainSemaphore, renderSemaphore;
+    VkFence renderFence;
 };
 
-struct DrawRendererInfo 
-{
-    bool imageResolutionChanged;
-    VkExtent3D dimension;
+struct RenderData {
+    VkCommandBuffer commandBuffer;
+	AllocatedImage offscreenImage;
+	unsigned int swapchainImageIndex;
+	VkImageView swapchainImageView;
+    VkExtent2D swapchainExtent;
+    VkDescriptorSet shaderImageTexture;
 };
 
-struct DrawGuiInfo
-{
-    bool imageResized;
-    VkImageView drawImageView;
-    ComputePushConstants& cpc;
-    RenderTimeArray rta;
-    int renderedFrames;
-};
-
-struct RendererInfo 
-{
+struct VulkanData {
     VkInstance instance;
-    VkDevice logicalDevice;
+    VkDevice device;
     VkPhysicalDevice physicalDevice;
     VkQueue graphicsQueue;
     VkFormat swapchainImageFormat;

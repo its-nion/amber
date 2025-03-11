@@ -11,25 +11,35 @@
 class VulkanContext
 {
     public:
-        VulkanContext(char* appName, GLFWwindow* windowHandle);
+        VulkanContext(char* appName, GLFWwindow* windowHandle, int imageBuffers);
         ~VulkanContext();
 
-        void Draw(VkCommandBuffer commandBuffer);
-        VkCommandBuffer BeginFrame();
-        void EndFrame(VkCommandBuffer commandBuffer);
-        void RenderToImage(VkCommandBuffer commandBuffer);
-        void CopyToSwapchain(VkCommandBuffer commandBuffer);
+		void CheckWindowSize(GLFWwindow* windowHandle);
+        RenderData BeginFrame(int frameIndex);
+        void RenderComputeShader(RenderData data, PushConstants& pc);
+		void EndFrame(RenderData renderData, int frameIndex);
 
-        VkInstance GetInstance() const { return m_Instance; }
-        VkDevice GetDevice() const { return m_Device; }
+        VulkanData GetVulkanData() const;
 
     private:
         void InitVulkan(char* appName, GLFWwindow* windowHandle);
-        void InitSwapchain(GLFWwindow* windowHandle);
+
+        void CreateSwapchain(GLFWwindow* windowHandle);
         void ResizeSwapchain(GLFWwindow* windowHandle);
-        void InitCommandStructure();
-        void CleanupVulkan();
-        void CreateComputePipeline();
+        void DestroySwapchain();
+
+        void InitCommandStructure(int imageBuffers);
+		void InitSyncStructure(int imageBuffers);
+
+        void InitImage(VkExtent3D dimension);
+        void InitDescriptors();
+        void InitComputePipeline();
+
+		void ResizeDrawImage();
+
+		// Changes if window has to be resized
+        bool m_ResizeSwapchain = false;
+        bool m_ResizeShaderImage = false;
 
         // Vulkan base
         VkInstance m_Instance;
@@ -58,4 +68,26 @@ class VulkanContext
 
         // Commandpool
         VkCommandPool m_CommandPool;
+
+        // Frame Info
+        std::vector<FrameData> m_Frames;
+
+        // Own image
+        AllocatedImage m_DrawImage;
+        VkExtent2D m_DrawExtent;
+
+        // Descriptor memory management
+        DescriptorAllocator m_GlobalDescriptorAllocator;
+
+        // Image Descriptor
+        VkDescriptorSet m_DrawImageDescriptorSet;
+        VkDescriptorSetLayout m_DrawImageDescriptorLayout;
+
+        // Pipeline
+        VkPipeline m_ComputePipeline;
+        VkPipelineLayout m_ComputePipelineLayout;
+
+        // Final image from compute Shader
+        VkSampler m_ShaderImageSampler;
+        VkDescriptorSet m_ShaderImageTexture;
 };

@@ -17,8 +17,8 @@ class Window
         GLFWwindow* GetWindowHandle() const;
 
     private:
-        GLFWwindow* windowHandle;
+        GLFWwindow* m_WindowHandle;
 
-        void centerWindow();
-	    void setWindowIcon();
+        void CenterWindow();
+	    void SetWindowIcon();
 };

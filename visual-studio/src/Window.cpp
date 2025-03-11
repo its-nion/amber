@@ -20,27 +20,27 @@ Window::Window(const char* name, int width, int height)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     // Create window
-    windowHandle = glfwCreateWindow(width, height, name, nullptr, nullptr);
+    m_WindowHandle = glfwCreateWindow(width, height, name, nullptr, nullptr);
 
-    if (!windowHandle) {
+    if (!m_WindowHandle) {
         glfwTerminate();
         throw std::runtime_error("Failed to create GLFW window");
     }
 
     // Adjust window
-    glfwSetWindowSizeLimits(windowHandle, 640, 360, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    glfwSetWindowSizeLimits(m_WindowHandle, 640, 360, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
-    centerWindow();
+    CenterWindow();
 
-    setWindowIcon();
+    SetWindowIcon();
 
-    glfwMakeContextCurrent(windowHandle);
+    glfwMakeContextCurrent(m_WindowHandle);
 }
 
 Window::~Window()
 {
-    if (windowHandle) {
-        glfwDestroyWindow(windowHandle);
+    if (m_WindowHandle) {
+        glfwDestroyWindow(m_WindowHandle);
     }
 
     glfwTerminate();
@@ -51,27 +51,27 @@ void Window::PollEvents() const {
 }
 
 bool Window::ShouldClose() const {
-    return glfwWindowShouldClose(windowHandle);
+    return glfwWindowShouldClose(m_WindowHandle);
 }
 
 GLFWwindow* Window::GetWindowHandle() const {
-    return windowHandle;
+    return m_WindowHandle;
 }
 
-void Window::centerWindow()
+void Window::CenterWindow()
 {
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     int windowWidth, windowHeight;
-    glfwGetWindowSize(windowHandle, &windowWidth, &windowHeight);
+    glfwGetWindowSize(m_WindowHandle, &windowWidth, &windowHeight);
 
     int posX = (mode->width - windowWidth) / 2;
     int posY = (mode->height - windowHeight) / 2;
 
-    glfwSetWindowPos(windowHandle, posX, posY);
+    glfwSetWindowPos(m_WindowHandle, posX, posY);
 }
 
-void Window::setWindowIcon()
+void Window::SetWindowIcon()
 {
     const bin2cpp::File& pngFile = bin2cpp::getAmberPngFile();
     size_t pngSize = pngFile.getSize();
@@ -82,7 +82,7 @@ void Window::setWindowIcon()
 
     if (data) {
         GLFWimage icon = { pngWidth, pngHeight, data };
-        glfwSetWindowIcon(windowHandle, 1, &icon);
+        glfwSetWindowIcon(m_WindowHandle, 1, &icon);
         stbi_image_free(data);
     }
     else {

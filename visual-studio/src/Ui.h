@@ -2,22 +2,24 @@
 
 #include "util/libraries.h"
 
+#include "Window.h"
+#include "VkHelper.h"
+
 class Ui {
 public:
-    Ui(GLFWwindow* window, VkInstance instance, VkDevice device, VkPhysicalDevice physicalDevice, VkQueue graphicsQueue, VkRenderPass renderPass, uint32_t imageCount);
+    Ui(GLFWwindow* windowHandle, VulkanData vbdata);
     ~Ui();
-    void NewFrame();
-    void Render(VkCommandBuffer commandBuffer);
-    void Cleanup();
+
+	void Update(RenderData& renderData, PushConstants& pc);
+    void Render(RenderData& renderData);
 
 private:
-    void InitImGui(VkRenderPass renderPass, uint32_t imageCount);
-    void CleanupImGui();
+    void InitImGui(GLFWwindow* windowHandle, VulkanData vbdata);
+    void SetImGuiStyle();
 
-    GLFWwindow* window;
-    VkInstance instance;
-    VkDevice device;
-    VkPhysicalDevice physicalDevice;
-    VkQueue graphicsQueue;
-    VkDescriptorPool descriptorPool;
+    bool m_StatsOpened;
+    float m_ZoomFactor = 0.9;
+    //bool _resizeDrawImage = false;
+
+    VkDescriptorPool m_ImGuiPool;
 };
