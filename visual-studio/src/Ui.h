@@ -10,8 +10,10 @@ public:
     Ui(GLFWwindow* windowHandle, VulkanData vbdata);
     ~Ui();
 
-	void Update(RenderData& renderData, PushConstants& pc);
+	void Update(RenderData& renderData, PushConstants& pc, int renderedFrames, float renderTime);
     void Render(RenderData& renderData);
+
+    UiTriggers GetUiTriggers();
 
 private:
     void InitImGui(GLFWwindow* windowHandle, VulkanData vbdata);
@@ -19,7 +21,9 @@ private:
 
     bool m_StatsOpened;
     float m_ZoomFactor = 0.9;
-    //bool _resizeDrawImage = false;
 
+	UiTriggers m_UiTriggers;
+
+    VkDevice m_Device;
     VkDescriptorPool m_ImGuiPool;
 };

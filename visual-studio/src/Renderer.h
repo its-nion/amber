@@ -7,7 +7,7 @@
 #include "Ui.h"
 
 /// <summary>
-/// Top level renderer class
+/// Top level renderer class, manages vulkan and ui rendering
 /// </summary>
 class Renderer 
 {
@@ -19,9 +19,13 @@ class Renderer
 
     private:
         int m_renderedImageCount = 0;
+        RenderTimeArray m_rta;
         int m_imageBuffers = 2;
+
 
         PushConstants m_Pushconstants;
 		VulkanContext* m_VulkanContext;
 		Ui* m_Ui;
+
+		void loadPresetParams(int preset);
 };

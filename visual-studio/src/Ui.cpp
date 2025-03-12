@@ -2,6 +2,8 @@
 
 Ui::Ui(GLFWwindow* windowHandle, VulkanData vbdata)
 {
+    m_Device = vbdata.device;
+
 	InitImGui(windowHandle, vbdata);
 
 	SetImGuiStyle();
@@ -9,9 +11,15 @@ Ui::Ui(GLFWwindow* windowHandle, VulkanData vbdata)
 
 Ui::~Ui()
 {
+    // Wait until GPU finished everything
+    vkDeviceWaitIdle(m_Device);
+
+    ImGui_ImplVulkan_Shutdown();
+
+    vkDestroyDescriptorPool(m_Device, m_ImGuiPool, nullptr);
 }
 
-void Ui::Update(RenderData& renderData, PushConstants& pc)
+void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, float renderTime)
 {
     // Get current global windowsize
     ImGuiIO& io = ImGui::GetIO();
@@ -51,6 +59,15 @@ void Ui::Update(RenderData& renderData, PushConstants& pc)
         if (ImGui::BeginMenu("Show"))
         {
             ImGui::MenuItem("Stats", NULL, &m_StatsOpened);
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Presets"))
+        {
+            if (ImGui::MenuItem("Default")) m_UiTriggers.changeParameterPreset = 1;
+            if (ImGui::MenuItem("Beach")) m_UiTriggers.changeParameterPreset = 2;
+            if (ImGui::MenuItem("Water")) m_UiTriggers.changeParameterPreset = 3;
+            if (ImGui::MenuItem("Clouds")) m_UiTriggers.changeParameterPreset = 4;
             ImGui::EndMenu();
         }
 
@@ -478,14 +495,13 @@ void Ui::Update(RenderData& renderData, PushConstants& pc)
             if (m_StatsOpened) {
                 ImGui::Begin("Debug", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove);
                 {
-                    ImGui::SetWindowSize(ImVec2(200, 85), 0);
+                    ImGui::SetWindowSize(ImVec2(250, 85), 0);
                     ImGui::SetWindowPos(ImVec2(0, 17.0), 0);
 
-                    /*ImGui::Text("Performance: %.1fms / %.0ffps", _rta.getAvgRendertime(), ImGui::GetIO().Framerate);
-                    ImGui::Text("Frames: %i", _renderedFrames);
-                    ImGui::Text("Runtime: %.2f s", _cpc.time);*/
-
-                    ImGui::Text("TEST");
+                    ImGui::Text("Rendertime: %.1f ms | %.1f ms", renderTime, ImGui::GetIO().DeltaTime * 1000.0f);
+                    ImGui::Text("Framerate: %.0f fps", ImGui::GetIO().Framerate);
+                    ImGui::Text("Frames: %i", renderedFrames);
+                    ImGui::Text("Runtime: %.2f s", glfwGetTime());
 
                     ImGui::End();
                 }
@@ -599,7 +615,10 @@ void Ui::Update(RenderData& renderData, PushConstants& pc)
 
             if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f)))
             {
-                //_resizeDrawImage = true;
+                m_UiTriggers.resizeDrawImage = true;
+				m_UiTriggers.drawImageDimension = { (uint32_t)inputImageWidth, (uint32_t)inputImageHeight, 1 };
+
+				m_UiTriggers.changeParameterPreset = 1;
 
                 renderData.offscreenImage.imageExtent = VkExtent3D(inputImageWidth, inputImageHeight, 1);
 
@@ -628,6 +647,18 @@ void Ui::Render(RenderData& renderData)
     ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), renderData.commandBuffer);
 
     vkCmdEndRendering(renderData.commandBuffer);
+}
+
+UiTriggers Ui::GetUiTriggers()
+{
+    auto triggers = m_UiTriggers;
+
+    // Reset local variable
+	m_UiTriggers.resizeDrawImage = false;
+    m_UiTriggers.drawImageDimension = {0, 0, 0};
+    m_UiTriggers.changeParameterPreset = 0;
+
+    return triggers;
 }
 
 void Ui::InitImGui(GLFWwindow* windowHandle, VulkanData vbdata)

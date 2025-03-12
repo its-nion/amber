@@ -1,5 +1,19 @@
 #pragma once
 
+enum ParameterPresets {
+    NOTHING,
+    START,
+    BEACH,
+    WATER,
+    CLOUDS
+};
+
+struct UiTriggers {
+	bool resizeDrawImage = false;
+    VkExtent3D drawImageDimension = {0,0,0};
+    int changeParameterPreset = 0;
+};
+
 struct PushConstants {
     float uv_scale;
     int fbm_octaves;

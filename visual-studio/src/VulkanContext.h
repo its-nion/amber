@@ -14,7 +14,7 @@ class VulkanContext
         VulkanContext(char* appName, GLFWwindow* windowHandle, int imageBuffers);
         ~VulkanContext();
 
-		void CheckWindowSize(GLFWwindow* windowHandle);
+		void Update(GLFWwindow* windowHandle, UiTriggers triggers);
         RenderData BeginFrame(int frameIndex);
         void RenderComputeShader(RenderData data, PushConstants& pc);
 		void EndFrame(RenderData renderData, int frameIndex);
@@ -39,7 +39,6 @@ class VulkanContext
 
 		// Changes if window has to be resized
         bool m_ResizeSwapchain = false;
-        bool m_ResizeShaderImage = false;
 
         // Vulkan base
         VkInstance m_Instance;

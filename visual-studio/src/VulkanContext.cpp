@@ -55,11 +55,16 @@ VulkanContext::~VulkanContext()
     vkDestroyInstance(m_Instance, nullptr);
 }
 
-void VulkanContext::CheckWindowSize(GLFWwindow* windowHandle)
+void VulkanContext::Update(GLFWwindow* windowHandle, UiTriggers triggers)
 {
     if (m_ResizeSwapchain) ResizeSwapchain(windowHandle);
 
-    if (m_ResizeShaderImage) ResizeDrawImage();
+    if (triggers.resizeDrawImage)
+    {
+        m_DrawImage.imageExtent = triggers.drawImageDimension;
+
+        ResizeDrawImage();
+    }
 }
 
 RenderData VulkanContext::BeginFrame(int frameIndex)
@@ -258,7 +263,7 @@ void VulkanContext::CreateSwapchain(GLFWwindow* windowHandle)
 
     vkb::Swapchain vkbSwapchain = swapchainBuilder
         .set_desired_format(VkSurfaceFormatKHR{ .format = m_SwapchainImageFormat, .colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR })
-        .set_desired_present_mode(VK_PRESENT_MODE_MAILBOX_KHR)
+        .set_desired_present_mode(VK_PRESENT_MODE_FIFO_KHR)
         .set_desired_extent(curentWindowWidth, curentWindowHeight)
         .add_image_usage_flags(VK_IMAGE_USAGE_TRANSFER_DST_BIT)
         .build()
@@ -325,7 +330,7 @@ void VulkanContext::InitSyncStructure(int imageBuffers)
 
 void VulkanContext::InitImage(VkExtent3D dimension)
 {
-    // Set Image Drawformat
+    //// Set Image Drawformat
     m_DrawImage.imageFormat = VK_FORMAT_R32G32B32A32_SFLOAT;
     m_DrawImage.imageExtent = dimension;
 
@@ -472,6 +477,8 @@ void VulkanContext::ResizeDrawImage()
 {
     vkDeviceWaitIdle(m_Device);
 
+    vkDestroySampler(m_Device, m_ShaderImageSampler, nullptr);
+
     vkDestroyImageView(m_Device, m_DrawImage.imageView, nullptr);
     vmaDestroyImage(m_Allocator, m_DrawImage.image, m_DrawImage.allocation);
 
@@ -491,6 +498,4 @@ void VulkanContext::ResizeDrawImage()
     }
 
     m_ShaderImageTexture = ImGui_ImplVulkan_AddTexture(m_ShaderImageSampler, m_DrawImage.imageView, VK_IMAGE_LAYOUT_GENERAL);
-
-    m_ResizeShaderImage = false;
 }
