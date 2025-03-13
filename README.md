@@ -76,6 +76,7 @@ Amber utilizes the following libraries and frameworks:
 - [VkBootstrap](https://github.com/charles-lunarg/vk-bootstrap) – Simplifies Vulkan initialization
 - [Vulkan Memory Allocator (VMA)](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator) – Manages efficient GPU memory allocation
 - [Bin2cpp](https://github.com/end2endzone/bin2cpp) – Embedding shaders and images directly into the application as C++ headers
+- [Tinyfiledialogs](https://github.com/native-toolkit/libtinyfiledialogs) – Native file dialog management for image export
 
 <br />
 
