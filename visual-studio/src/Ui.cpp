@@ -7,6 +7,9 @@ Ui::Ui(GLFWwindow* windowHandle, VulkanData vbdata)
 	InitImGui(windowHandle, vbdata);
 
 	SetImGuiStyle();
+
+    std::random_device rd;  // Create random device
+    m_Gen = std::mt19937(rd()); // Seed mt19937 with it
 }
 
 Ui::~Ui()
@@ -64,8 +67,8 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
 
         if (ImGui::BeginMenu("Presets"))
         {
-            if (ImGui::MenuItem("Default")) m_UiTriggers.changeParameterPreset = 1;
-            if (ImGui::MenuItem("Beach")) m_UiTriggers.changeParameterPreset = 2;
+            if (ImGui::MenuItem("Ocean")) m_UiTriggers.changeParameterPreset = 1;
+            if (ImGui::MenuItem("Sky")) m_UiTriggers.changeParameterPreset = 2;
             if (ImGui::MenuItem("Water")) m_UiTriggers.changeParameterPreset = 3;
             if (ImGui::MenuItem("Clouds")) m_UiTriggers.changeParameterPreset = 4;
             ImGui::EndMenu();
@@ -116,11 +119,12 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
 
             ImGui::Text("UV");
             ImGui::SameLine();
-            ImGui::SetCursorPosX(228.0);
-            if (ImGui::SmallButton("Default##UV"))
+            ImGui::SetCursorPosX(235.0);
+            if (ImGui::SmallButton("Random##UV"))
             {
-                pc.uv_scale = 2.0;
-                pc.uv_offset = glm::vec2(0.0, 0.0);
+                pc.uv_scale = GetRandomNormalFloat(1.75, 0.5);
+                pc.uv_offset = glm::vec2(GetRandomUniformFloat(-50.0, 50.0),
+                                         GetRandomUniformFloat(-50.0, 50.0));
             };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
@@ -182,15 +186,15 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
 
             ImGui::Text("Fractal Brownian Motion");
             ImGui::SameLine();
-            ImGui::SetCursorPosX(228.0);
-            if (ImGui::SmallButton("Default##FBM"))
+            ImGui::SetCursorPosX(235.0);
+            if (ImGui::SmallButton("Random##FBM"))
             {
-                pc.fbm_octaves = 8;
-                pc.fbm_amplitude = 0.5;
-                pc.fbm_frequency = 1.0;
-                pc.fbm_lacunarity = 1.0;
-                pc.fbm_gain = 0.5;
-                pc.fbm_shift = 2.0;
+                pc.fbm_octaves = GetRandomNormalInt(8, 1);
+                pc.fbm_amplitude = GetRandomNormalFloat(0.5, 0.025);
+                pc.fbm_frequency = GetRandomNormalFloat(1.0, 0.1);
+                pc.fbm_lacunarity = GetRandomNormalFloat(1.0, 0.025);
+                pc.fbm_gain = GetRandomNormalFloat(0.5, 0.01);
+                pc.fbm_shift = GetRandomNormalFloat(2.0, 0.1);
             };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
@@ -290,18 +294,38 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
 
             ImGui::Text("Warp");
             ImGui::SameLine();
-            ImGui::SetCursorPosX(228.0);
-            if (ImGui::SmallButton("Default##WARP"))
+            ImGui::SetCursorPosX(235.0);
+            if (ImGui::SmallButton("Random##WARP"))
             {
-                pc.warp_iterations = 3;
-                pc.warp_strength = 3;
-                pc.warp_offset = glm::vec2(1.0, 1.0);
-                pc.warp_primaryColor = glm::vec4(0.04, 0.02, 0.0, 0.0);
-                pc.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
-                pc.warp_colorBalance = 2;
-                pc.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
-                pc.warp_tintShade = 8;
-                pc.warp_tintStrength = 0.5;
+                pc.warp_iterations = GetRandomUniformInt(2, 4);
+
+                if (pc.warp_iterations == 2) pc.warp_strength = GetRandomUniformInt(2, 4);
+                if (pc.warp_iterations == 3) pc.warp_strength = GetRandomUniformInt(2, 3);
+                if (pc.warp_iterations == 4) pc.warp_strength = 2;
+
+                pc.warp_offset = glm::vec2(GetRandomUniformFloat(-50.0, 50.0),
+                                           GetRandomUniformFloat(-50.0, 50.0));
+
+                pc.warp_primaryColor = glm::vec4(GetRandomUniformFloat(0.0, 1.0) / GetRandomUniformFloat(8.0, 12.0),
+                                                 GetRandomUniformFloat(0.0, 1.0) / GetRandomUniformFloat(8.0, 12.0),
+                                                 GetRandomUniformFloat(0.0, 1.0) / GetRandomUniformFloat(8.0, 12.0),
+                                                 1.0);
+
+                pc.warp_secondaryColor = glm::vec4(GetRandomUniformFloat(0.0, 1.0),
+                                                   GetRandomUniformFloat(0.0, 1.0),
+                                                   GetRandomUniformFloat(0.0, 1.0),
+                                                   1.0);
+
+                pc.warp_colorBalance = GetRandomUniformInt(1, 3);
+
+                pc.warp_tintColor = glm::vec4(GetRandomUniformFloat(0.0, 1.0),
+                                              GetRandomUniformFloat(0.0, 1.0),
+                                              GetRandomUniformFloat(0.0, 1.0),
+                                              1.0);
+
+                pc.warp_tintShade = GetRandomNormalInt(8.0, 1.0);
+
+                pc.warp_tintStrength = GetRandomNormalFloat(0.3, 0.25);
             };
 
             ImGui::Dummy(ImVec2(0.0, 1.0));
@@ -498,7 +522,7 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
                     ImGui::SetWindowSize(ImVec2(250, 85), 0);
                     ImGui::SetWindowPos(ImVec2(0, 17.0), 0);
 
-                    ImGui::Text("Rendertime: %.1f ms | %.1f ms", renderTime, ImGui::GetIO().DeltaTime * 1000.0f);
+                    ImGui::Text("Rendertime: %.1f ms", renderTime);
                     ImGui::Text("Framerate: %.0f fps", ImGui::GetIO().Framerate);
                     ImGui::Text("Frames: %i", renderedFrames);
                     ImGui::Text("Runtime: %.2f s", glfwGetTime());
@@ -758,4 +782,25 @@ void Ui::SetImGuiStyle()
     style->Colors[ImGuiCol_Button] = ImVec4(0.30, 0.30, 0.30, 1.0);
     style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.35, 0.35, 0.35, 1.0);
     style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.4, 0.4, 0.4, 1.0);
+}
+
+int Ui::GetRandomUniformInt(int min, int max)
+{
+    std::uniform_int_distribution<int> dist(min, std::nextafter(max, max + 1));
+    return dist(m_Gen);
+}
+
+float Ui::GetRandomUniformFloat(float min, float max) {
+    std::uniform_real_distribution<float> dist(min, std::nextafter(max, max + 1.0f));
+    return dist(m_Gen);
+}
+
+int Ui::GetRandomNormalInt(float mean, float stddev) {
+	std::normal_distribution<float> dist(mean, stddev);
+	return dist(m_Gen);
+}
+
+float Ui::GetRandomNormalFloat(float mean, float stddev) {
+	std::normal_distribution<float> dist(mean, stddev);
+	return dist(m_Gen);
 }

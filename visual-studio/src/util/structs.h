@@ -2,8 +2,8 @@
 
 enum ParameterPresets {
     NOTHING,
-    START,
-    BEACH,
+    OCEAN,
+    SKY,
     WATER,
     CLOUDS
 };

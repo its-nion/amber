@@ -98,24 +98,6 @@ float fbm(vec2 x) {
 	return color;
 }
 
-
-/// Adapted Warp
-/// from Inigo Quilez
-/// https://iquilezles.org/articles/warp/
-// float warp(vec2 x) {
-//     vec2 offset = vec2(1.23, 4.56);
-
-//     vec2 q = vec2( fbm( x + offset ),
-//                    fbm( x + 2 * offset ) );
-
-//     for (int i = 0; i < PushConstants.warp_iterations; i++) {
-//         q = vec2( fbm( x + 4.0 * q + (i * offset) + 0.05 * PushConstants.time),
-//                   fbm( x + 4.0 * q + (2 * i * offset + 0.1 * PushConstants.time) ) );
-//     }
-
-//     return fbm( x + 4.0 * q );
-// }
-
 vec3 warpColor(vec2 x) {
     vec2 offset = PushConstants.warp_offset;//vec2(1.23, 4.56);
 
@@ -146,33 +128,6 @@ vec3 warpColor(vec2 x) {
 
     return color;
 }
-
-// vec3 warp3Color(vec2 x) {
-//     vec2 offset = vec2(1.23, 4.56);
-//     vec3 colorTint = vec3(0, 0, 0);
-
-//     vec2 q = vec2( fbm( x + offset ),
-//                    fbm( x + 2 * offset ) );
-
-//     vec2 r = vec2( fbm( x + 4.0 * q + vec2(15.23, 1.56) + 0.05 * PushConstants.time),
-//                    fbm( x + 4.0 * q + vec2(12.23, 4.56) + 0.10 * PushConstants.time) );
-
-//     float f = fbm( x + 4.0 * r );
-
-//     vec3 color = mix(vec3(0.0, 0.0, 0.0),
-//                      vec3(0.9, 0.85, 0.67),
-//                      clamp(f*f*f*f, 0.0, 1.0));
-
-//     color = mix(color,
-//                 vec3(0.0, 0.8, 1.0),
-//                 clamp(pow(length(r), 6) * 0.1, 0.0, 1.0));
-
-//     // color = mix(color,
-//     //             vec3(0.0, 0.8, 1.0),
-//     //             clamp(length(r * r *r *r * r * r) * PushConstants.scale, 0.0, 1.0));
-
-//     return color;
-// }
 
 void main() 
 {

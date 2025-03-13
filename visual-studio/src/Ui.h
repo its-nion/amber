@@ -19,11 +19,18 @@ private:
     void InitImGui(GLFWwindow* windowHandle, VulkanData vbdata);
     void SetImGuiStyle();
 
-    bool m_StatsOpened;
+    int GetRandomUniformInt(int min, int max);
+    float GetRandomUniformFloat(float min, float max);
+    int GetRandomNormalInt(float mean, float stddev);
+    float GetRandomNormalFloat(float mean, float stddev);
+
+    bool m_StatsOpened = false;
     float m_ZoomFactor = 0.9;
 
 	UiTriggers m_UiTriggers;
 
     VkDevice m_Device;
     VkDescriptorPool m_ImGuiPool;
+
+    std::mt19937 m_Gen;
 };
