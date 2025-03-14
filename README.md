@@ -56,11 +56,11 @@ Amber is a lightweight image generator that lets you design stunning patterns in
 <!-- SAMPLE IMAGES -->
 ## Sample Images
 <div style="display: flex", align="center">
-  <img src="images/red-1.png" alt="red image" style="width: 49%">
-  <img src="images/white-1.png" alt="white image" style="width: 49%">
-  <img src="images/desert-1.png" alt="desert image" style="width: 99%">
-  <img src="images/blue-1.png" alt="water image" style="width: 49%">
-  <img src="images/blue-2.png" alt="cloud image" style="width: 49%">
+  <img src="images/ocean.png" alt="red image" style="width: 49%">
+  <img src="images/celeste.png" alt="white image" style="width: 49%">
+  <img src="images/wetlands.png" alt="desert image" style="width: 99%">
+  <img src="images/harmony.png" alt="water image" style="width: 49%">
+  <img src="images/crimson.png" alt="cloud image" style="width: 49%">
 </div>
 
 <br />
