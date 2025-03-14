@@ -20,6 +20,20 @@ void Renderer::Draw(GLFWwindow* windowHandle)
 {
 	UiTriggers triggers = m_Ui->GetUiTriggers();
 
+	// Export image if requested
+	if (triggers.exportImage)
+	{
+		std::string path = triggers.exportImagePath;
+
+		std::thread exportThread([this, path]() {
+			m_VulkanContext->ExportDrawImage(path.c_str());
+			m_Ui->ImageExportFinished();
+		});
+
+		// Let the thread run independently
+		exportThread.detach();
+	}
+
 	// Check if preset was loaded through ui
 	if (triggers.changeParameterPreset != 0)
 	{
@@ -69,7 +83,7 @@ void Renderer::loadPresetParams(int preset)
 		case 0: // Nothing
 			break;
 
-		case 1: // Water
+		case 1: // Ocean
 			m_Pushconstants.uv_scale = 2.0;
 			m_Pushconstants.uv_offset = glm::vec2(0.0, 0.0);
 
@@ -93,7 +107,7 @@ void Renderer::loadPresetParams(int preset)
 			m_Pushconstants.time = 0.0f;
 			break;
 
-		case 2: // Clouds
+		case 2: // Celeste
 			m_Pushconstants.uv_scale = 2.0;
 			m_Pushconstants.uv_offset = glm::vec2(10.0, 11.0);
 
@@ -110,14 +124,14 @@ void Renderer::loadPresetParams(int preset)
 			m_Pushconstants.warp_primaryColor = glm::vec4(0.0, 0.324, 1.0, 1.0);
 			m_Pushconstants.warp_secondaryColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
 			m_Pushconstants.warp_colorBalance = 1;
-			m_Pushconstants.warp_tintColor = glm::vec4(0.0, 0.5, 1.0, 1.0);
-			m_Pushconstants.warp_tintShade = 8;
-			m_Pushconstants.warp_tintStrength = 0.0;
+			m_Pushconstants.warp_tintColor = glm::vec4(0.853, 0.0, 1.0, 1.0);
+			m_Pushconstants.warp_tintShade = 2;
+			m_Pushconstants.warp_tintStrength = 0.25;
 
 			m_Pushconstants.time = 0.0f;
 			break;
 
-		case 3: // Default
+		case 3: // Harmony
 			m_Pushconstants.uv_scale = 1.3;
 			m_Pushconstants.uv_offset = glm::vec2(1.0, 0.25);
 
@@ -141,7 +155,7 @@ void Renderer::loadPresetParams(int preset)
 			m_Pushconstants.time = 0.0f;
 			break;
 
-		case 4: // Beach
+		case 4: // Wetlands
 			m_Pushconstants.uv_scale = 2.0;
 			m_Pushconstants.uv_offset = glm::vec2(0.0, 0.0);
 
@@ -155,11 +169,35 @@ void Renderer::loadPresetParams(int preset)
 			m_Pushconstants.warp_iterations = 2;
 			m_Pushconstants.warp_strength = 3;
 			m_Pushconstants.warp_offset = glm::vec2(1.0, 1.0);
-			m_Pushconstants.warp_primaryColor = glm::vec4(0.113, 0.061, 0.019, 0.0);
-			m_Pushconstants.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 0.0);
+			m_Pushconstants.warp_primaryColor = glm::vec4(0.059, 0.026, 0.0, 1.0);
+			m_Pushconstants.warp_secondaryColor = glm::vec4(0.9, 0.85, 0.67, 1.0);
 			m_Pushconstants.warp_colorBalance = 2;
 			m_Pushconstants.warp_tintColor = glm::vec4(0.0, 0.8, 1.0, 1.0);
 			m_Pushconstants.warp_tintShade = 6;
+			m_Pushconstants.warp_tintStrength = 0.5;
+
+			m_Pushconstants.time = 0.0f;
+			break;
+
+		case 5: // Crimson
+			m_Pushconstants.uv_scale = 2.0;
+			m_Pushconstants.uv_offset = glm::vec2(5.0, -32.5);
+
+			m_Pushconstants.fbm_octaves = 8;
+			m_Pushconstants.fbm_amplitude = 0.5;
+			m_Pushconstants.fbm_frequency = 1.0;
+			m_Pushconstants.fbm_lacunarity = 1.0;
+			m_Pushconstants.fbm_gain = 0.5;
+			m_Pushconstants.fbm_shift = 2.025;
+
+			m_Pushconstants.warp_iterations = 3;
+			m_Pushconstants.warp_strength = 3;
+			m_Pushconstants.warp_offset = glm::vec2(1.5, 1.5);
+			m_Pushconstants.warp_primaryColor = glm::vec4(0.0, 0.0, 0.0, 1.0);
+			m_Pushconstants.warp_secondaryColor = glm::vec4(1.0, 0.0, 0.0, 1.0);
+			m_Pushconstants.warp_colorBalance = 3;
+			m_Pushconstants.warp_tintColor = glm::vec4(1.0, 0.0, 0.0, 1.0);
+			m_Pushconstants.warp_tintShade = 3;
 			m_Pushconstants.warp_tintStrength = 0.5;
 
 			m_Pushconstants.time = 0.0f;

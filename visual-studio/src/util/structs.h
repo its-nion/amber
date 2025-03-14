@@ -3,14 +3,17 @@
 enum ParameterPresets {
     NOTHING,
     OCEAN,
-    SKY,
-    WATER,
-    CLOUDS
+    CELESTE,
+    HARMONY,
+    WETLANDS,
+    CRIMSON
 };
 
 struct UiTriggers {
 	bool resizeDrawImage = false;
     VkExtent3D drawImageDimension = {0,0,0};
+    bool exportImage = false;
+    char* exportImagePath;
     int changeParameterPreset = 0;
 };
 

@@ -19,6 +19,8 @@ class VulkanContext
         void RenderComputeShader(RenderData data, PushConstants& pc);
 		void EndFrame(RenderData renderData, int frameIndex);
 
+        void ExportDrawImage(const char* path);
+
         VulkanData GetVulkanData() const;
 
     private:

@@ -27,5 +27,7 @@ class Renderer
 		VulkanContext* m_VulkanContext;
 		Ui* m_Ui;
 
+        std::thread m_exportThread;
+
 		void loadPresetParams(int preset);
 };

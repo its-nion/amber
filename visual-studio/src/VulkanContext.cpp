@@ -173,6 +173,61 @@ void VulkanContext::EndFrame(RenderData renderData, int frameIndex)
     }
 }
 
+void VulkanContext::ExportDrawImage(const char* path)
+{
+    //vkDeviceWaitIdle(m_Device);
+
+    // Get layout of the image (including row pitch)
+    VkImageSubresource subResource{ VK_IMAGE_ASPECT_COLOR_BIT, 0, 0 };
+    VkSubresourceLayout subResourceLayout;
+    vkGetImageSubresourceLayout(m_Device, m_DrawImage.image, &subResource, &subResourceLayout);
+
+    // Map image memory so we can start copying from it
+    void* data;
+    vmaMapMemory(m_Allocator, m_DrawImage.allocation, &data);
+    char* mappedData = static_cast<char*>(data) + subResourceLayout.offset;
+
+    // Prepare a buffer to store the converted RGB data
+    std::vector<uint8_t> imageData(m_DrawImage.imageExtent.width * m_DrawImage.imageExtent.height * 3); // 3 bytes per pixel (RGB)
+    // Write pixel data row by row into the imageData buffer
+    uint8_t* pixelPtr = imageData.data();
+
+    // Loop through the image data row by row
+    for (uint32_t y = 0; y < m_DrawImage.imageExtent.height; y++) {
+        // Get a pointer to the current row (interpreted as 16-bit floating-point values)
+        float* row = reinterpret_cast<float*>(mappedData);
+
+        for (uint32_t x = 0; x < m_DrawImage.imageExtent.width; x++) {
+            // Each pixel consists of 4 floats (R, G, B, A)
+            float r = row[0]; // Red
+            float g = row[1]; // Green
+            float b = row[2]; // Blue
+            // Optional: float a = row[3]; // Alpha if needed
+
+            // Convert the float components to 8-bit values (clamping between 0.0f and 1.0f)
+            uint8_t r8 = static_cast<uint8_t>(std::min(std::max(r, 0.0f), 1.0f) * 255.0f);
+            uint8_t g8 = static_cast<uint8_t>(std::min(std::max(g, 0.0f), 1.0f) * 255.0f);
+            uint8_t b8 = static_cast<uint8_t>(std::min(std::max(b, 0.0f), 1.0f) * 255.0f);
+
+            // Store the RGB values in the image data buffer
+            *pixelPtr++ = r8; // Red
+            *pixelPtr++ = g8; // Green
+            *pixelPtr++ = b8; // Blue
+
+            // Move to the next pixel (4 floats per pixel: R, G, B, A)
+            row += 4;
+        }
+
+        // Move to the next row, taking into account row pitch (potential padding)
+        mappedData += subResourceLayout.rowPitch;
+    }
+
+    stbi_write_png(path, m_DrawImage.imageExtent.width, m_DrawImage.imageExtent.height, 3, imageData.data(), m_DrawImage.imageExtent.width * 3);
+
+    // Unmap memory using VMA
+    vmaUnmapMemory(m_Allocator, m_DrawImage.allocation);
+}
+
 VulkanData VulkanContext::GetVulkanData() const
 {
     return {

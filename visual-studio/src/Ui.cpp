@@ -1,5 +1,7 @@
 #include "Ui.h"
 
+#include "../third-party/include/tinyfiledialogs/tinyfiledialogs.h"
+
 Ui::Ui(GLFWwindow* windowHandle, VulkanData vbdata)
 {
     m_Device = vbdata.device;
@@ -49,10 +51,16 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
                 }
                 else
                 {
-                    /*const char* filterPatterns[] = { "*.png" };
+                    const char* filterPatterns[] = { "*.png" };
                     char* path = tinyfd_saveFileDialog("Export", "Example", 1, filterPatterns, nullptr);
 
-                    if (path != NULL) exportImage(path);*/
+                    if (path != NULL)
+                    {
+                        m_UiTriggers.exportImage = true;
+                        m_UiTriggers.exportImagePath = path;
+
+                        m_IsExporting = true;
+                    }
                 }
             }
 
@@ -68,9 +76,10 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
         if (ImGui::BeginMenu("Presets"))
         {
             if (ImGui::MenuItem("Ocean")) m_UiTriggers.changeParameterPreset = 1;
-            if (ImGui::MenuItem("Sky")) m_UiTriggers.changeParameterPreset = 2;
-            if (ImGui::MenuItem("Water")) m_UiTriggers.changeParameterPreset = 3;
-            if (ImGui::MenuItem("Clouds")) m_UiTriggers.changeParameterPreset = 4;
+            if (ImGui::MenuItem("Celeste")) m_UiTriggers.changeParameterPreset = 2;
+            if (ImGui::MenuItem("Harmony")) m_UiTriggers.changeParameterPreset = 3;
+            if (ImGui::MenuItem("Wetlands")) m_UiTriggers.changeParameterPreset = 4;
+            if (ImGui::MenuItem("Crimson")) m_UiTriggers.changeParameterPreset = 5;
             ImGui::EndMenu();
         }
 
@@ -532,6 +541,35 @@ void Ui::Update(RenderData& renderData, PushConstants& pc, int renderedFrames, f
             }
         }
 
+        // Image Export Loading Screen
+        if (m_IsExporting) ImGui::OpenPopup("Image Export");
+        if (ImGui::BeginPopupModal("Image Export", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::SetWindowSize(ImVec2(250, 80), 0);
+            ImGui::SetWindowPos(ImVec2((imGuiViewport->WorkSize.x - 250.0) / 2.0, (imGuiViewport->WorkSize.y - 80.0) / 2.0), 0);
+
+            if (m_IsExporting)
+            {
+                // Shortened and centered text
+                ImGui::Text("Please wait");
+
+                // Add spacing between text and progress bar
+                ImGui::Dummy(ImVec2(0.0, 5.0));
+
+                // Add progressbar and make it wider
+                ImGui::ProgressBar(-1.0f * (float)ImGui::GetTime(), ImVec2(235.0f, 0.0f), "Exporting Image");
+            }
+            else 
+            {
+                ImGui::Text("Image exported successfully");
+
+                ImGui::SetCursorPos(ImVec2(180.0, 53.0));
+                if (ImGui::Button("OK", ImVec2(ImGui::GetWindowSize().x * 0.25f, 0.0f))) ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+
         // No Image Error
         if (menu_action == "NoImage") ImGui::OpenPopup("No Image Error");
         if (ImGui::BeginPopupModal("No Image Error", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
@@ -673,6 +711,11 @@ void Ui::Render(RenderData& renderData)
     vkCmdEndRendering(renderData.commandBuffer);
 }
 
+void Ui::ImageExportFinished()
+{
+    m_IsExporting = false;
+}
+
 UiTriggers Ui::GetUiTriggers()
 {
     auto triggers = m_UiTriggers;
@@ -680,6 +723,8 @@ UiTriggers Ui::GetUiTriggers()
     // Reset local variable
 	m_UiTriggers.resizeDrawImage = false;
     m_UiTriggers.drawImageDimension = {0, 0, 0};
+    m_UiTriggers.exportImage = false;
+    m_UiTriggers.exportImagePath = nullptr;
     m_UiTriggers.changeParameterPreset = 0;
 
     return triggers;
