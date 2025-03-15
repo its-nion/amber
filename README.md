@@ -82,9 +82,9 @@ Amber utilizes the following libraries and frameworks:
 
 <!-- How It Works -->
 ## How It Works
-Amber generates images using a Vulkan-based compute shader pipeline. At startup, it initializes Vulkan, sets up a swapchain and other required vulkan objects, and configures descriptor sets and synchronization mechanisms. The application then builds a dedicated compute pipeline to render images on the GPU. Users can interact with the ImGui interface to modify rendering parameters in real time through push-constants.
+Amber starts by creating a window with GLFW, providing a cross-platform foundation for user input. It then initializes Vulkan to manage GPU-heavy computations. With Vulkan in place, Amber builds a compute shader pipeline, enabling parallel execution of small GPU programs (shaders), that generate and manipulate images in real time. Specifically, it employs fractal noise (FBM) and warping effects to produce dynamic visuals. [(more)](#acknowledgments)
 
-The compute shader executes a warped Fractal Brownian Motion (FBM) algorithm, which layers multiple octaves of procedural noise. By applying a nonlinear warping function, the shader distorts the noise pattern, producing complex organic textures. This enables users to create a wide variety of abstract visuals with smooth, natural variations.
+To give users full control over the image, Amber features an ImGui-based UI that allows real-time parameter adjustments through Push-Constants. This makes modifying parameters, experimenting with presets, and fine-tuning rendering settings possible. Once a desired look is achieved, the image can be exported as a PNG.
 
 <br />
 
@@ -93,9 +93,11 @@ The compute shader executes a warped Fractal Brownian Motion (FBM) algorithm, wh
 Amber is currently only supported on windows. Follow these steps to run it:
 
 1. Go to the [latest release page](https://github.com/its-nion/amber/releases/latest)
-2. Download and run ``Amber.exe``
-3. Customize your image via the user interface on the right
-4. Hover over "File" and press "Export" to save your image
+2. Download ``Amber.exe``
+3. Run ``Amber.exe``
+4. Hover over "File" in the top left corner and press "New" to create an image in a desized resolution
+5. Customize your image via the user interface on the right. If you're looking for a good starting point, check out the presets in the menu bar
+6. Hover over "File" in the top left corner and press "Export" to save your image
 
 <br />
 
@@ -105,7 +107,7 @@ Amber is currently only supported on windows. Follow these steps to run it:
 <br />
 
 ## Building Amber
-1. Clone the repository:
+1. Download or Clone the repository:
 ```
 git clone https://github.com/its-nion/amber.git
 ```
