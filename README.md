@@ -39,7 +39,7 @@ Amber is a lightweight image generator that lets you design stunning patterns in
 <br />
 
 <div style="display: flex", align="center">
-  <img src="images/about-1.gif" alt="about-gif" style="width: 100%">
+  <img src="images/about-2.gif" alt="about-gif" style="width: 100%">
 </div>
 
 <br />
